@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>과학실1 보관함 안내</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#eef3e4;--panel:#fbfcf7;--ink:#1d3a33;--mute:#5c7068;--line:#cfd9c0;--acc:#1f8a5b;--accfg:#fff;--wood:#c9a46a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16211d;--panel:#1f2d28;--ink:#e6efe6;--mute:#9db1a6;--line:#35483f;--acc:#4cc38a;--accfg:#0f1a15;--wood:#a98650;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#16211d;--panel:#1f2d28;--ink:#e6efe6;--mute:#9db1a6;--line:#35483f;--acc:#4cc38a;--accfg:#0f1a15;--wood:#a98650;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+header{padding:20px 16px 12px;border-bottom:4px solid var(--wood);background:var(--panel)}
+h1{margin:0 0 10px;font-size:1.4rem;font-weight:700}
+input,textarea,button{font:inherit;color:inherit}
+#q{width:100%;max-width:520px;padding:10px 12px;border:2px solid var(--line);border-radius:6px;background:var(--bg)}
+#q:focus,textarea:focus,#nm:focus,button:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
+#hint{margin:6px 0 0;color:var(--mute);font-size:.9rem;min-height:1.4em}
+main{max-width:1040px;margin:0 auto;padding:14px 16px 32px}
+#rail{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px}
+.t{flex:0 0 96px;border:2px solid var(--line);border-radius:6px;background:var(--panel);padding:0;cursor:pointer;text-align:left;overflow:hidden}
+.t img{display:block;width:100%;height:72px;object-fit:cover}
+.t span{display:block;padding:4px 6px;font-size:.78rem;line-height:1.3;height:2.9em;overflow:hidden}
+.t[aria-current="true"]{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.t.dim{opacity:.35}
+#view{display:grid;gap:14px;margin-top:6px}
+@media(min-width:800px){#view{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.ph{position:relative;background:#0003;border-radius:8px;overflow:hidden;display:flex;justify-content:center}
+.box{position:relative;display:block;max-width:100%;line-height:0}
+.box img{display:block;max-width:100%;max-height:72vh;object-fit:contain}
+.box.ed{cursor:crosshair;outline:3px dashed var(--acc);outline-offset:-3px}
+.hs{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;padding:0;cursor:pointer;line-height:1.2}
+.hs b{width:44px;height:44px;border-radius:50%;background:var(--acc);color:var(--accfg);font-size:1.5rem;display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 1px 6px #0006}
+.hs span{background:#000a;color:#fff;font-size:.78rem;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.hs:focus-visible{outline:3px solid #fff}
+.pd{position:absolute;width:16px;height:16px;border-radius:50%;background:#e5484d;border:2px solid #fff;transform:translate(-50%,-50%)}
+.btn{margin-top:10px;padding:8px 12px;border:2px solid var(--acc);border-radius:6px;background:none;cursor:pointer;font-weight:600}
+.btn.p{background:var(--acc);color:var(--accfg)}
+#ep{margin-top:8px}#ep select{width:100%;padding:8px;border:2px solid var(--line);border-radius:6px;background:var(--bg)}
+.nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;border-radius:50%;background:var(--acc);color:var(--accfg);font-size:1.3rem;cursor:pointer}
+#pv{left:8px}#nx{right:8px}
+.card{background:var(--panel);border:2px solid var(--line);border-radius:8px;padding:14px}
+label{display:block;font-size:.88rem;color:var(--mute);margin:10px 0 4px}
+label:first-child{margin-top:0}
+#nm{width:100%;padding:8px 10px;border:2px solid var(--line);border-radius:6px;background:var(--bg);font-weight:600}
+textarea{width:100%;min-height:240px;padding:10px;border:2px solid var(--line);border-radius:6px;background:var(--bg);resize:vertical}
+.sv{margin:6px 0 0;color:var(--mute);font-size:.82rem}
+</style></head><body>
+<header><h1>과학실1 보관함 안내</h1>
+<input id="q" type="search" placeholder="시약이나 재료 이름으로 찾기" aria-label="품목 검색">
+<p id="hint" aria-live="polite"></p></header>
+<main><div id="rail"></div>
+<section id="view"><div class="ph"><button class="nav" id="pv" aria-label="이전 칸">‹</button><span class="box" id="box"><img id="im" alt=""></span><button class="nav" id="nx" aria-label="다음 칸">›</button></div>
+<div class="card"><label for="nm">칸 이름</label><input id="nm">
+<label for="tx">보관 품목 (한 줄에 하나씩)</label>
+<textarea id="tx" placeholder="예) 염산 0.1M 500mL&#10;수산화나트륨 (시약병 3개)&#10;비커 100mL 20개"></textarea>
+<p class="sv">이 브라우저에 자동으로 저장돼요. 다른 기기에서는 따로 적어야 해요.</p>
+<button class="btn" id="ed" type="button">연결 편집 켜기</button>
+<div id="ep" hidden><p class="sv">사진에서 이동 버튼을 놓을 곳을 누르고, 갈 칸을 고른 뒤 추가하세요. 이미 있는 버튼을 누르면 지워져요.</p><label for="to">이동할 칸</label><select id="to"></select><button class="btn p" id="add" type="button">여기에 연결 추가</button></div></div></section></main>
+<script>
+const S=[
+  {"n": "과학실1 전경", "img": "images/01.jpg"},
+  {"n": "키 큰 갈색 수납장", "img": "images/02.jpg"},
+  {"n": "갈색 하부장 (안전 표지)", "img": "images/03.jpg"},
+  {"n": "갈색 하부장 (파란 상자)", "img": "images/04.jpg"},
+  {"n": "목재 책 선반", "img": "images/05.jpg"},
+  {"n": "흰색 유리문 수납장", "img": "images/06.jpg"},
+  {"n": "창가 흰 서랍장 1", "img": "images/07.jpg"},
+  {"n": "창가 흰 서랍장 2", "img": "images/08.jpg"}
+];let N={},cur=0,q="";
+try{N=JSON.parse(localStorage.getItem("lab1")||"{}")}catch(e){}
+const g=i=>N[i]||{name:S[i].n,text:""};
+const sv=()=>{try{localStorage.setItem("lab1",JSON.stringify(N))}catch(e){}};
+const hit=i=>!q||(g(i).name+" "+g(i).text).toLowerCase().includes(q);
+function rail(){const r=document.getElementById("rail");r.innerHTML="";
+S.forEach((s,i)=>{const b=document.createElement("button");b.className="t"+(hit(i)?"":" dim");
+b.setAttribute("aria-current",i===cur);b.innerHTML='<img alt=""><span></span>';
+b.firstChild.src=s.img;b.lastChild.textContent=g(i).name;b.onclick=()=>{cur=i;show()};r.appendChild(b)});
+const h=document.getElementById("hint");
+if(q){const n=S.filter((_,i)=>hit(i)).length;h.textContent=n?n+"개 칸에서 찾았어요. 흐리지 않은 칸을 눌러 보세요.":"찾는 품목이 없어요. 칸별 목록에 먼저 적어 주세요."}else h.textContent="칸을 눌러 사진을 보고, 보관 품목을 적어 두세요."}
+function show(){document.getElementById("im").src=S[cur].img;document.getElementById("im").alt=g(cur).name;
+document.getElementById("nm").value=g(cur).name;marks();document.getElementById("tx").value=g(cur).text;rail()}
+function upd(){N[cur]={name:document.getElementById("nm").value,text:document.getElementById("tx").value};sv();rail()}
+let LK={},ed=false,pend=null;
+try{LK=JSON.parse(localStorage.getItem("lab1l")||"{}")}catch(e){}
+const lk=i=>LK[i]||[{x:50,y:86,to:(i+1)%S.length}];
+const sl=()=>{try{localStorage.setItem("lab1l",JSON.stringify(LK))}catch(e){}};
+function fillTo(){const t=document.getElementById("to");t.innerHTML="";S.forEach((s,i)=>{if(i!==cur){const o=document.createElement("option");o.value=i;o.textContent=g(i).name;t.appendChild(o)}})}
+function marks(){const b=document.getElementById("box");b.querySelectorAll(".hs,.pd").forEach(e=>e.remove());
+if(pend&&pend.at!==cur)pend=null;if(ed)fillTo();
+lk(cur).forEach((l,k)=>{const e=document.createElement("button");e.className="hs";e.style.left=l.x+"%";e.style.top=l.y+"%";
+e.innerHTML="<b>›</b><span></span>";e.lastChild.textContent=ed?"누르면 삭제":g(l.to).name;
+e.onclick=ev=>{ev.stopPropagation();if(ed){const a=lk(cur).slice();a.splice(k,1);LK[cur]=a;sl();marks()}else{cur=l.to;show()}};b.appendChild(e)});
+if(pend){const d=document.createElement("i");d.className="pd";d.style.left=pend.x+"%";d.style.top=pend.y+"%";b.appendChild(d)}}
+document.getElementById("box").onclick=ev=>{if(!ed)return;const r=document.getElementById("im").getBoundingClientRect();
+pend={x:Math.round((ev.clientX-r.left)/r.width*100),y:Math.round((ev.clientY-r.top)/r.height*100),at:cur};marks()};
+document.getElementById("ed").onclick=()=>{ed=!ed;pend=null;document.getElementById("box").classList.toggle("ed",ed);
+document.getElementById("ed").textContent=ed?"연결 편집 끄기":"연결 편집 켜기";document.getElementById("ep").hidden=!ed;marks()};
+document.getElementById("add").onclick=()=>{if(!pend)return;const a=lk(cur).slice();a.push({x:pend.x,y:pend.y,to:+document.getElementById("to").value});LK[cur]=a;sl();pend=null;marks()};
+document.getElementById("nm").oninput=upd;document.getElementById("tx").oninput=upd;
+document.getElementById("q").oninput=e=>{q=e.target.value.trim().toLowerCase();rail()};
+document.getElementById("pv").onclick=()=>{cur=(cur+S.length-1)%S.length;show()};
+document.getElementById("nx").onclick=()=>{cur=(cur+1)%S.length;show()};
+show();
+</script></body></html>
