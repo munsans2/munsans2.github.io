@@ -1,848 +1,155 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>문산중학교 3D 과학실 기자재 안내</title>
-<style>
-@font-face{font-family:SeoulNamsan;src:url(https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/SeoulNamsanM.woff)}
-*{box-sizing:border-box}
-body{margin:0;overflow:hidden;background:#eaf2fa;color:#21334b;font-family:SeoulNamsan,'Noto Sans KR',sans-serif}
-canvas{position:fixed;inset:0;display:block;touch-action:none}
-.glass{background:#ffffffd9;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid #ffffffee;box-shadow:0 8px 30px #23374b29;border-radius:20px}
-button,input{font:inherit}
-button{border:0;cursor:pointer;color:inherit}
-button:focus-visible,input:focus-visible{outline:3px solid #60a5fa}
-#header{position:fixed;z-index:3;left:18px;top:16px;padding:12px 17px;font-weight:700}
-#header span{font-size:11px;color:#2563eb;background:#e6efff;border-radius:50px;padding:5px;margin-left:5px}
-#rooms{position:fixed;z-index:3;left:50%;top:16px;transform:translateX(-50%);display:flex;gap:4px;padding:5px;border-radius:99px}
-#rooms button{font-size:13px;white-space:nowrap;border-radius:99px;padding:9px 13px;background:transparent;font-weight:700}
-#rooms button.on{background:#376dab;color:white}
-#night{position:fixed;right:16px;top:16px;z-index:4;border-radius:99px;padding:12px 15px}
-#panel{position:fixed;z-index:3;top:85px;bottom:85px;left:16px;width:295px;padding:16px;display:flex;flex-direction:column}
-#panel h3{margin:0 0 12px;font-size:19px}
-#query{width:100%;padding:11px;border-radius:12px;border:1px solid #d0dce8;background:#ffffffed}
-.small{font-size:11px;color:#738195;line-height:1.5}
-#results{overflow:auto;flex:1;min-height:0;display:grid;align-content:start;gap:7px}
-.result{text-align:left;border:1px solid #d9e3ed;background:#fff9;border-radius:12px;padding:10px;font-size:13px}
-.result:hover{background:#e9f4ff;border-color:#549be5}
-.result small{display:block;color:#76859a;margin-top:4px}
-#info{position:fixed;z-index:4;right:16px;top:85px;width:290px;max-height:65vh;overflow:auto;padding:16px}
-#info[hidden]{display:none}
-#info h3{margin:0 0 8px}
-#info p{font-size:13px;line-height:1.6}
-#shelves{display:grid;gap:5px;margin:10px 0}
-.shelf{border:1px solid #d8e4ed;background:#f2f7fd;text-align:left;padding:8px;border-radius:9px}
-.shelf.on{background:#dbeafe;border-color:#3b82f6}
-.action{background:#e5edf6;border-radius:11px;padding:10px 14px;font-weight:bold}
-.action.blue{background:#376dab;color:white}
-#toolbar{position:fixed;z-index:5;left:50%;bottom:16px;transform:translateX(-50%);padding:7px;display:flex;gap:5px;border-radius:99px;max-width:96vw;overflow:auto}
-#toolbar button{border-radius:99px;padding:10px 14px;white-space:nowrap;font-size:12px;font-weight:700;background:#eef4fb}
-#tip{position:fixed;z-index:2;top:78px;left:50%;transform:translateX(-50%);background:#334155df;color:white;padding:8px 15px;border-radius:99px;font-size:12px;white-space:nowrap;pointer-events:none}
-#photoLayer{position:fixed;inset:0;z-index:12;display:grid;place-items:center;background:#111827a0;padding:16px}
-#photoLayer[hidden]{display:none}
-#photoBox{background:#fff;color:#21334b;border-radius:22px;width:min(920px,96vw);max-height:90vh;overflow:auto;padding:20px}
-#photoPics{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-#photoPics img{max-width:min(440px,100%);max-height:60vh;object-fit:contain;border-radius:12px}
-body.dark{background:#111827;color:#f5f8ff}
-body.dark .glass{background:#293548e3;border-color:#526071}
-body.dark #query,body.dark .result,body.dark .shelf,body.dark .action,body.dark #toolbar button{background:#394960;color:white;border-color:#57667a}
-@media(max-width:1080px){
- #rooms{top:74px}
- #panel,#info{top:126px}
- #tip{display:none}
-}
-@media(max-width:680px){
- #header{top:7px;left:8px;font-size:12px;padding:8px}
- #night{top:7px;right:8px;font-size:11px;padding:9px}
- #rooms{top:54px;max-width:98vw}
- #rooms button{padding:7px 9px;font-size:11px}
- #panel{top:103px;left:8px;bottom:auto;max-height:196px;width:min(250px,67vw);padding:10px}
- #panel h3{font-size:14px;margin-bottom:7px}
- #query{padding:7px;font-size:12px}
- #panel>.small{display:none}
- #results{max-height:87px}
- #info{top:auto;right:8px;bottom:68px;width:min(270px,83vw);max-height:34vh}
- #toolbar{bottom:7px}
- #toolbar button{padding:8px 9px;font-size:11px}
-}
-</style>
-</head>
-<body>
-<header id="header" class="glass">
- 🔬 문산중학교 과학실 <span>visionOS</span>
-</header>
-<nav id="rooms" class="glass"></nav>
-<button id="night" class="glass">🌙 야간 모드</button>
-
-<aside id="panel" class="glass">
- <h3>기자재 위치 검색</h3>
- <input id="query" type="search" placeholder="기자재 이름·보관장 번호">
- <p class="small">검색 결과를 누르면 보관장으로 이동합니다.<br>※ 등록된 기자재 위치는 시연용 예시입니다.</p>
- <div id="results"></div>
-</aside>
-
-<aside id="info" class="glass" hidden>
- <h3 id="infoTitle"></h3>
- <p id="infoDesc"></p>
- <div id="shelves"></div>
- <button id="open" class="action blue">문 열기</button>
- <button id="close" class="action">닫기</button>
- <p class="small">실제 보관 위치와 선반 번호는 확인 후 수정하세요.</p>
-</aside>
-
-<div id="tip">드래그: 360° 회전 · 휠: 확대·축소 · 보관장 클릭: 내부 보기</div>
-<div id="toolbar" class="glass">
- <button id="reset">🏫 전체 조망</button>
- <button id="top">⬚ 위에서 보기</button>
- <button id="photos">📷 현장 사진</button>
- <button id="full">⛶ 전체화면</button>
-</div>
-<div id="photoLayer" hidden>
- <div id="photoBox">
-  <button id="closePhotos" class="action" style="float:right">✕ 닫기</button>
-  <h3 id="photoTitle">현장 사진</h3>
-  <div id="photoPics"></div>
- </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script>
-'use strict';
-
-/*
- 좌표는 사진으로 추정한 임시값입니다.
- doors: [왼쪽 벽의 z위치, 출입문 폭]
- 보관장: [번호, 종류, x, z, 회전각도, 폭, 높이, 깊이, 선반수]
- wood=목재 여닫이문, glass=미닫이문
- tray=트레이장, drawer=서랍장, open=개방형
-*/
-
-const series=(prefix,type,x,zs,rot,w,h,d,n)=>
- zs.map((z,i)=>[
-  prefix+String(i+1).padStart(2,'0'),
-  type,x,z,rot,w,h,d,n
- ]);
-
-const R=[
- {
-  id:'science1',name:'과학실 1',size:[9.2,13],
-  chair:'gray',doors:[[-5.54,1.08],[5.67,1.20]],
-  cab:[
-   ...series('S1-W','wood',-4.16,[1.65,3.05,4.23],90,1.30,2.55,.65,4),
-   ...series('S1-L','wood',-4.20,[-3.21,-1.58,.05],90,1.50,1.13,.58,2),
-   ...[-3.60,-2.02,-.44].map((x,i)=>[
-    'S1-G0'+(i+1),'glass',x,-6.02,0,1.48,2.30,.58,4
-   ]),
-   ...series('S1-D','drawer',4.20,[-4.60,-2.90,-1.20,.50,2.20],-90,1.62,.93,.55,3)
-  ]
- },
- {
-  id:'science2',name:'과학실 2',size:[9.2,13],
-  chair:'mint',doors:[[-3.72,1.08],[2.50,1.22]],
-  cab:[
-   ...series('S2-G','glass',-4.16,[-4.98,-2.31,-.75,.84],90,1.43,2.42,.58,4),
-   ['S2-O01','open',-4.15,4.34,90,1.45,1.66,.55,4],
-   ...[-3.55,-1.85].map((x,i)=>[
-    'S2-G0'+(i+5),'glass',x,-6.02,0,1.60,2.20,.57,4
-   ]),
-   ...series('S2-D','drawer',4.20,[-4.60,-2.90,-1.20,.50,2.20],-90,1.62,.93,.55,3)
-  ]
- },
- {
-  id:'science3',name:'과학실 3',size:[9.2,13],
-  chair:'gray',doors:[[5.72,1.16]],
-  cab:[
-   ...series('S3-W','wood',-4.15,[2.55,4.05],90,1.30,2.50,.64,4),
-   ...series('S3-L','wood',-4.16,[-3.55,-1.92,-.29,1.18],90,1.50,1.16,.57,2),
-   ...[-3.56,-1.90,-.24].map((x,i)=>[
-    'S3-G0'+(i+1),'glass',x,-6.03,0,1.54,2.33,.58,4
-   ]),
-   ...series('S3-D','drawer',4.20,[-4.63,-2.93,-1.23,.47,2.17],-90,1.62,.93,.55,3)
-  ]
- },
- {
-  id:'prep',name:'과학준비실',size:[4.8,9.4],
-  chair:'blue',doors:[[3.82,1.16]],
-  cab:[
-   ...series('P-L','glass',-2.05,[-3.40,-1.92,-.44,1.04,2.51],90,1.37,2.05,.58,4),
-   ...series('P-R','tray',2.05,[-2.64,-1.27,.10,1.47],-90,1.25,2.12,.60,4)
-  ]
- }
-];
-
-// 기자재는 시연용 예시 데이터입니다.
-const ITEMS=[
- ['광학현미경','science1','S1-G01',2,'생물 표본'],
- ['비커','science1','S1-G02',2,'화학 초자'],
- ['전자저울','science1','S1-G03',1,'질량'],
- ['힘센서','science2','S2-G01',2,'MBL 물리'],
- ['전압센서','science2','S2-G02',2,'전기'],
- ['삼각플라스크','science2','S2-G03',1,'화학'],
- ['천체망원경','science3','S3-G01',3,'우주'],
- ['암석 표본','science3','S3-G02',2,'지구과학'],
- ['지구본','science3','S3-G03',1,'지구과학'],
- ['시험관','prep','P-L01',2,'유리기구'],
- ['스포이트','prep','P-R02',1,'실험'],
- ['보안경','prep','P-L04',3,'안전']
-];
-
-const $=id=>document.getElementById(id);
-
-if(!window.THREE||!THREE.OrbitControls){
- alert('Three.js 로딩 실패: 인터넷 연결을 확인하세요.');
- throw Error('Three.js required');
-}
-
-const scene=new THREE.Scene();
-scene.background=new THREE.Color('#eaf2fa');
-
-const camera=new THREE.PerspectiveCamera(
- 46,innerWidth/innerHeight,.1,100
-);
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(innerWidth,innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
-renderer.outputEncoding=THREE.sRGBEncoding;
-document.body.append(renderer.domElement);
-
-const orbit=new THREE.OrbitControls(camera,renderer.domElement);
-orbit.enableDamping=true;
-orbit.maxPolarAngle=Math.PI/2-.04;
-orbit.minDistance=1.2;
-orbit.maxDistance=36;
-
-scene.add(new THREE.HemisphereLight(0xffffff,0xb1c0d0,1.4));
-const sun=new THREE.DirectionalLight(0xffffff,.8);
-sun.position.set(-7,15,11);
-scene.add(sun);
-
-const mat={};
-for(const [n,c] of Object.entries({
- floor:0xe5e8ec,wall:0xf5f5f1,white:0xf5f7f9,
- wood:0xb58b60,lightwood:0xd6b88e,
- metal:0x8d9dad,glass:0x80baca,
- gray:0x858e9b,mint:0x9ad2c6,blue:0x3284b4,
- green:0x34745c,yellow:0xf7d928,
- fridge:0x9fa8b2,red:0xea6666
-})){
- mat[n]=new THREE.MeshStandardMaterial({
-  color:c,roughness:.73
- });
-}
-mat.glass.transparent=true;
-mat.glass.opacity=.4;
-mat.glass.depthWrite=false;
-
-const stage=new THREE.Group();
-scene.add(stage);
-
-let current=R[0],cabs=[],doors=[];
-let selected=null,moving=null,isDark=false;
-
-function box(g,w,h,d,x,y,z,m,id){
- const v=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);
- v.position.set(x,y,z);
- if(id)v.userData.cab=id;
- g.add(v);
- return v;
-}
-
-function badge(txt){
- const c=document.createElement('canvas');
- c.width=400;c.height=110;
- const t=c.getContext('2d');
- t.fillStyle='#fff';
- t.fillRect(0,0,400,110);
- t.strokeStyle='#a0aec0';
- t.lineWidth=5;
- t.strokeRect(2,2,396,106);
- t.fillStyle='#29445f';
- t.textAlign='center';
- t.textBaseline='middle';
- t.font='bold 41px sans-serif';
- t.fillText(txt,200,56);
-
- const s=new THREE.Sprite(new THREE.SpriteMaterial({
-  map:new THREE.CanvasTexture(c),depthTest:false
- }));
- s.scale.set(1.03,.28,1);
- return s;
-}
-
-function walls(r){
- const [w,d]=r.size;
- const h=r.id==='prep'?3.25:3.45;
-
- box(stage,w,.12,d,0,-.08,0,mat.floor);
- const grid=new THREE.GridHelper(
-  Math.max(w,d),
-  Math.round(Math.max(w,d)*1.7),
-  0xc7cdd4,0xc7cdd4
- );
- grid.position.y=.015;
- grid.scale.set(
-  w/Math.max(w,d),1,d/Math.max(w,d)
- );
- stage.add(grid);
-
- if(r.id==='prep'){
-  // 준비실 뒤쪽: 왼쪽 냉장고, 오른쪽 창문
-  const a=-.80,b=.55;
-  box(stage,w/2+a,h,.09,(-w/2+a)/2,h/2,-d/2,mat.wall);
-  box(stage,w/2-b,h,.09,(w/2+b)/2,h/2,-d/2,mat.wall);
-  box(stage,b-a,1.45,.09,(a+b)/2,.725,-d/2,mat.wall);
-  box(stage,b-a,.45,.09,(a+b)/2,3.025,-d/2,mat.wall);
-  box(stage,b-a,1.35,.04,(a+b)/2,2.125,-d/2,mat.glass);
-  for(const x of [a,b]){
-   box(stage,.07,1.4,.13,x,2.125,-d/2+.07,mat.lightwood);
-  }
- }else{
-  box(stage,w,h,.09,0,h/2,-d/2,mat.wall);
-  box(stage,w*.36,1.18,.08,1.4,2.05,-d/2+.08,mat.green);
-  box(stage,w*.36,.75,.7,1.4,.38,-d/2+.40,mat.white);
- }
-
- // 왼쪽 출입문 구간을 비워 두기
- let cursor=-d/2;
- for(const [z,width] of r.doors){
-  const a=z-width/2,b=z+width/2;
-  if(a>cursor){
-   box(stage,.08,1.03,a-cursor,-w/2,.515,
-    (a+cursor)/2,mat.wall);
-  }
-  cursor=b;
- }
- if(cursor<d/2){
-  box(stage,.08,1.03,d/2-cursor,-w/2,.515,
-   (cursor+d/2)/2,mat.wall);
- }
- box(stage,.08,.6,d,-w/2,h-.3,0,mat.wall);
-
- // 오른쪽 창가의 벽과 하부 수납장
- box(stage,.09,1.1,d,w/2,.55,0,mat.wall);
- box(stage,.09,.57,d,w/2,h-.285,0,mat.wall);
-
- if(r.id!=='prep'){
-  for(let j=0;j<4;j++){
-   const z=-d/2+1.15+j*(d-2.30)/3;
-   box(stage,.04,1.38,1.8,w/2,2.08,z,mat.glass);
-   for(const k of [-.9,0,.9]){
-    box(stage,.11,1.38,.04,w/2-.04,2.08,z+k,mat.lightwood);
-   }
-   for(const y of [1.4,2.76]){
-    box(stage,.11,.06,1.8,w/2-.04,y,z,mat.lightwood);
-   }
-  }
- }
-
- // 전면은 내부 관찰을 위해 개방
- for(const x of [-w/2,w/2]){
-  box(stage,.12,2.4,.12,x,1.2,d/2,mat.lightwood);
- }
- for(let z=-d/2+1.3;z<d/2-1;z+=2.6){
-  for(const x of [-w*.23,w*.23]){
-   box(stage,1.2,.05,.35,x,h-.06,z,mat.white);
-  }
- }
-}
-
-function door(z,width,i){
- const g=new THREE.Group();
- g.position.set(-current.size[0]/2+.08,0,z);
- g.rotation.y=Math.PI/2;
- stage.add(g);
-
- box(g,.09,2.43,.13,-width/2,1.215,0,mat.lightwood);
- box(g,.09,2.43,.13,width/2,1.215,0,mat.lightwood);
- box(g,width+.08,.10,.13,0,2.4,0,mat.lightwood);
-
- const pivot=new THREE.Group();
- pivot.position.set(-width/2+.05,0,.05);
- g.add(pivot);
-
- box(pivot,width-.12,2.27,.06,
-  (width-.12)/2,1.18,0,mat.wood);
- box(pivot,width-.30,1.1,.07,
-  (width-.12)/2,1.50,.06,mat.glass);
-
- const e={pivot,angle:-1.2,target:-1.2,i};
- doors.push(e);
-
- pivot.traverse(o=>{
-  if(o.isMesh)o.userData.door=i;
- });
- return e;
-}
-
-function cabinet(c){
- const [id,type,x,z,deg,w,h,d,n]=c;
- const g=new THREE.Group();
- g.position.set(x,0,z);
- g.rotation.y=deg*Math.PI/180;
- stage.add(g);
- const body=type==='wood'?mat.wood:mat.white;
-
- box(g,w,h,.07,0,h/2,-d/2,body,id);
- for(const xx of [-w/2,w/2]){
-  box(g,.09,h,d,xx,h/2,0,body,id);
- }
- for(const yy of [.05,h-.05]){
-  box(g,w,.10,d,0,yy,0,body,id);
- }
-
- const shelves=[];
- for(let j=0;j<n;j++){
-  const yy=.18+j*(h-.35)/n;
-  shelves.push(yy);
-  box(g,w-.12,.05,d-.11,0,yy,0,
-   type==='wood'?mat.lightwood:mat.white,id);
-
-  if(type==='tray'&&j<n-1){
-   for(let k=0;k<2;k++){
-    box(g,w*.32,.18,d*.65,
-     (k-.5)*w*.42,yy+.12,0,
-     [mat.red,mat.blue,mat.yellow,mat.mint][(j+k)%4],id);
-   }
-  }
- }
-
- const panels=[];
- if(type==='drawer'){
-  for(let j=0;j<3;j++){
-   const p=new THREE.Group();
-   p.position.set(0,.17+j*.25,d/2);
-   g.add(p);
-   box(p,w-.12,.21,.07,0,0,0,mat.white,id);
-   box(p,.20,.035,.06,0,.01,.05,mat.metal,id);
-   panels.push(p);
-  }
- }else if(type==='wood'){
-  for(const sign of [-1,1]){
-   const p=new THREE.Group();
-   p.position.set(sign*w/2,0,d/2);
-   g.add(p);
-   box(p,w/2-.06,h-.16,.06,
-    -sign*(w/4-.02),h/2,0,mat.wood,id);
-   panels.push(p);
-  }
- }else if(type!=='open'){
-  for(const sign of [-1,1]){
-   const p=new THREE.Group();
-   p.position.set(sign*w/4,0,d/2);
-   g.add(p);
-   box(p,w/2-.07,h-.17,.035,0,h/2,0,mat.glass,id);
-   panels.push(p);
-  }
- }
-
- const s=badge(id);
- s.position.set(0,h+.20,0);
- g.add(s);
-
- const marker=new THREE.LineSegments(
-  new THREE.EdgesGeometry(
-   new THREE.BoxGeometry(w+.12,h+.12,d+.12)
-  ),
-  new THREE.LineBasicMaterial({
-   color:0x168bff,depthTest:false
-  })
- );
- marker.position.y=h/2;
- marker.visible=false;
- g.add(marker);
-
- const focusShelf=new THREE.LineSegments(
-  new THREE.EdgesGeometry(
-   new THREE.BoxGeometry(w-.08,.12,d-.06)
-  ),
-  new THREE.LineBasicMaterial({
-   color:0xfbbc2c,depthTest:false
-  })
- );
- focusShelf.visible=false;
- g.add(focusShelf);
-
- const obj={
-  id,type,w,h,d,n,shelves,g,panels,
-  marker,focusShelf,progress:0,target:0,deg
- };
- cabs.push(obj);
- return obj;
-}
-
-function table(x,z,color){
- const g=new THREE.Group();
- g.position.set(x,0,z);
- stage.add(g);
- box(g,2.55,.10,1.15,0,.93,0,mat.white);
-
- for(const xx of [-1.15,1.15]){
-  for(const zz of [-.49,.49]){
-   box(g,.075,.85,.075,xx,.45,zz,mat.metal);
-  }
- }
- box(g,2.1,.49,.07,0,.54,-.46,mat.white);
-
- for(const xx of [-.76,.76]){
-  for(const zz of [-.85,.85]){
-   box(g,.36,.07,.34,xx,.50,zz,mat[color]);
-   box(g,.36,.42,.07,
-    xx,.76,zz+(zz<0?-.15:.15),mat[color]);
-  }
- }
-}
-
-function fixtures(){
- const r=current,[w,d]=r.size;
-
- if(r.id==='prep'){
-  // 후면 왼쪽 냉장고
-  box(stage,.80,2.30,.78,
-   -1.40,1.15,-d/2+.50,mat.fridge);
-
-  // 후면 오른쪽 노란 폐수통
-  box(stage,1.05,1.00,.57,
-   1.31,.50,-d/2+.50,mat.yellow);
-
-  // 오른쪽 벽에 밀착한 관물대
-  box(stage,.78,2.5,.86,
-   w/2-.44,1.25,3.45,mat.fridge);
-
-  // 중앙 철망은 생성하지 않음
-  return;
- }
-
- for(const x of [-1.63,1.25]){
-  for(const z of [-3.55,-1.35,.85,3]){
-   table(x,z,r.chair);
-  }
- }
-
- // 교사용 실험대와 전자칠판
- box(stage,2.8,.13,1.1,
-  1.4,1.04,d/2-1.40,mat.white);
- for(const x of [.16,2.64]){
-  for(const z of [d/2-1.85,d/2-.95]){
-   box(stage,.09,.94,.09,x,.48,z,mat.metal);
-  }
- }
- box(stage,3.55,1.70,.12,
-  1.95,2,d/2-.15,mat.metal);
- box(stage,3.42,1.58,.13,
-  1.95,2,d/2-.20,mat.white);
-}
-
-function loadRoom(id){
- moving=null;
- current=R.find(v=>v.id===id)||R[0];
-
- while(stage.children.length){
-  stage.remove(stage.children[0]);
- }
- cabs=[];doors=[];selected=null;
- $('info').hidden=true;
-
- walls(current);
- current.doors.forEach(([z,width],i)=>{
-  door(z,width,i+1);
- });
- current.cab.forEach(cabinet);
- fixtures();
-
- for(const b of $('rooms').children){
-  b.classList.toggle('on',b.dataset.room===current.id);
- }
-
- camera.position.set(
-  current.size[0]*1.1,
-  current.size[1]*.86,
-  current.size[1]*1.30
- );
- orbit.target.set(0,.65,0);
- orbit.update();
- search();
-}
-
-function cameraTo(pos,target){
- moving={
-  from:camera.position.clone(),
-  to:new THREE.Vector3(...pos),
-  look:orbit.target.clone(),
-  end:new THREE.Vector3(...target),
-  t:0
- };
-}
-
-function selectCab(id,item){
- const c=cabs.find(v=>v.id===id);
- if(!c)return;
- if(selected){
-  selected.marker.visible=false;
-  selected.focusShelf.visible=false;
- }
-
- selected=c;
- c.marker.visible=true;
- const p=c.g.position;
- const angle=c.deg*Math.PI/180;
- const cx=p.x+Math.sin(angle)*3;
- const cz=p.z+Math.cos(angle)*3;
-
- cameraTo(
-  [cx,c.h+1,cz],
-  [p.x,c.h*.52,p.z]
- );
-
- $('info').hidden=false;
- $('infoTitle').textContent=c.id+' · '+({
-  wood:'목재 여닫이 보관장',
-  glass:'유리 미닫이 보관장',
-  tray:'트레이 보관장',
-  drawer:'하부 서랍장',
-  open:'개방형 선반'
- })[c.type];
- $('infoDesc').textContent=
-  current.name+' · '+c.n+'단 선반 · 위치는 임시 배치';
-
- $('shelves').replaceChildren();
- for(let j=1;j<=c.n;j++){
-  const b=document.createElement('button');
-  b.className='shelf';
-  const found=ITEMS.filter(it=>
-   it[1]===current.id&&it[2]===c.id&&it[3]===j
-  );
-  b.textContent=j+'단'+(
-   found.length?' · '+found.map(v=>v[0]).join(', '):''
-  );
-  b.onclick=()=>markShelf(j);
-  $('shelves').append(b);
- }
-
- if(item)markShelf(item[3]);
- $('open').textContent=c.target>.5?'문 닫기':'문 열기';
- $('open').disabled=c.type==='open';
-}
-
-function markShelf(j){
- if(!selected)return;
- selected.focusShelf.visible=true;
- selected.focusShelf.position.set(
-  0,selected.shelves[j-1],0
- );
- [...$('shelves').children].forEach((b,i)=>{
-  b.classList.toggle('on',i===j-1);
- });
-}
-
-function search(){
- const q=$('query').value.toLowerCase().trim();
- $('results').replaceChildren();
-
- const items=q
-  ?ITEMS.filter(i=>
-   (i[0]+' '+i[2]+' '+i[4]+' '+
-    R.find(r=>r.id===i[1]).name
-   ).toLowerCase().includes(q))
-  :ITEMS.filter(i=>i[1]===current.id);
-
- const cabinets=q
-  ?R.flatMap(r=>
-   r.cab.filter(c=>c[0].toLowerCase().includes(q))
-    .map(c=>[c[0],r.id,c[0],1,'보관장']))
-  :[];
-
- for(const i of [...items,...cabinets]){
-  const b=document.createElement('button');
-  b.className='result';
-  const a=document.createElement('b');
-  a.textContent=i[0];
-  const s=document.createElement('small');
-  s.textContent=R.find(r=>r.id===i[1]).name+
-   ' · '+i[2]+' · '+i[3]+'단 (예시)';
-  b.append(a,s);
-  b.onclick=()=>{
-   if(current.id!==i[1])loadRoom(i[1]);
-   selectCab(i[2],i);
-  };
-  $('results').append(b);
- }
-
- if(!$('results').children.length){
-  $('results').textContent='검색 결과가 없습니다.';
- }
-}
-
-// 공간 선택 버튼
-for(const r of R){
- const b=document.createElement('button');
- b.dataset.room=r.id;
- b.textContent=r.name;
- b.onclick=()=>loadRoom(r.id);
- $('rooms').append(b);
-}
-
-$('query').oninput=search;
-$('open').onclick=()=>{
- if(selected){
-  selected.target=1-selected.target;
-  $('open').textContent=
-   selected.target?'문 닫기':'문 열기';
- }
-};
-$('close').onclick=()=>{
- $('info').hidden=true;
- if(selected){
-  selected.marker.visible=false;
-  selected.focusShelf.visible=false;
- }
- selected=null;
-};
-
-$('reset').onclick=()=>cameraTo(
- [current.size[0]*1.1,
-  current.size[1]*.86,
-  current.size[1]*1.3],
- [0,.65,0]
-);
-$('top').onclick=()=>cameraTo(
- [0,Math.max(...current.size)*1.65,.01],
- [0,0,0]
-);
-
-$('night').onclick=()=>{
- isDark=!isDark;
- document.body.classList.toggle('dark',isDark);
- scene.background.set(isDark?'#111827':'#eaf2fa');
- $('night').textContent=isDark?'☀️ 주간 모드':'🌙 야간 모드';
-};
-
-$('full').onclick=()=>
- document.fullscreenElement
- ?document.exitFullscreen()
- :document.documentElement.requestFullscreen?.();
-
-// 선택 공간의 실제 사진 열기
-const PHOTO_NAMES={
- science1:['science1_a.jpg','science1_b.jpg'],
- science2:['science2_a.jpg','science2_b.jpg'],
- science3:['science3_a.jpg','science3_b.jpg'],
- prep:['prep_a.jpg','prep_b.jpg']
-};
-$('photos').onclick=()=>{
- $('photoTitle').textContent=current.name+' · 현장 사진';
- $('photoPics').replaceChildren();
-
- for(const name of PHOTO_NAMES[current.id]){
-  const img=document.createElement('img');
-  img.src='photos/'+name;
-  img.alt=current.name+' 사진';
-  img.onerror=()=>{
-   const p=document.createElement('p');
-   p.textContent='사진 미등록: photos/'+name;
-   img.replaceWith(p);
-  };
-  $('photoPics').append(img);
- }
- $('photoLayer').hidden=false;
-};
-$('closePhotos').onclick=()=>{
- $('photoLayer').hidden=true;
-};
-$('photoLayer').onclick=e=>{
- if(e.target===$('photoLayer')){
-  $('photoLayer').hidden=true;
- }
-};
-
-// 보관장 및 출입문 마우스 클릭
-let point;
-renderer.domElement.onpointerdown=e=>{
- point=[e.clientX,e.clientY];
-};
-renderer.domElement.onpointerup=e=>{
- if(!point||
-  Math.hypot(
-   e.clientX-point[0],
-   e.clientY-point[1]
-  )>7)return;
-
- point=null;
- const m=new THREE.Vector2(
-  e.clientX/innerWidth*2-1,
-  -e.clientY/innerHeight*2+1
- );
- const ray=new THREE.Raycaster();
- ray.setFromCamera(m,camera);
-
- for(const hit of ray.intersectObjects(stage.children,true)){
-  let obj=hit.object;
-  while(obj&&obj!==stage){
-   if(obj.userData.cab){
-    selectCab(obj.userData.cab);
-    return;
-   }
-   if(obj.userData.door){
-    const d=doors.find(v=>v.i===obj.userData.door);
-    if(d)d.target=d.target<-.4?0:-1.2;
-    return;
-   }
-   obj=obj.parent;
-  }
- }
-};
-
-// 화면 크기 자동 조절
-addEventListener('resize',()=>{
- renderer.setSize(innerWidth,innerHeight);
- camera.aspect=innerWidth/innerHeight;
- camera.updateProjectionMatrix();
-});
-
-// 3D 애니메이션
-const clock=new THREE.Clock();
-function animate(){
- requestAnimationFrame(animate);
- const dt=Math.min(clock.getDelta(),.05);
-
- for(const c of cabs){
-  c.progress+=(c.target-c.progress)*Math.min(1,dt*8);
-
-  if(c.type==='wood'){
-   c.panels.forEach((g,i)=>{
-    g.rotation.y=(i===0?-1:1)*1.35*c.progress;
-   });
-  }else if(c.type==='glass'||c.type==='tray'){
-   c.panels[0].position.x=
-    -c.w/4+c.w*.46*c.progress;
-  }else if(c.type==='drawer'){
-   c.panels.forEach(g=>{
-    g.position.z=c.d/2+.36*c.progress;
-   });
-  }
- }
-
- for(const d of doors){
-  d.angle+=(d.target-d.angle)*Math.min(1,dt*7);
-  d.pivot.rotation.y=d.angle;
- }
-
- if(moving){
-  moving.t=Math.min(1,moving.t+dt*1.6);
-  const t=1-(1-moving.t)**3;
-  camera.position.copy(moving.from).lerp(moving.to,t);
-  orbit.target.copy(moving.look).lerp(moving.end,t);
-  if(moving.t>=1)moving=null;
- }
-
- orbit.update();
- renderer.render(scene,camera);
-}
-
-loadRoom('science1');
-animate();
-</script>
-</body>
-</html>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#eaf2f9" />
+  <title>문산중학교 | 3D 과학실 기자재 안내</title>
+  <style>
+    @font-face {
+      font-family: SeoulNamsan;
+      src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/SeoulNamsanM.woff") format("woff");
+      font-display: swap;
+    }
+    :root {
+      color-scheme: light;
+      --bg: #eaf2f9;
+      --ink: #18334b;
+      --muted: #63778b;
+      --glass: rgba(255, 255, 255, .88);
+      --line: rgba(255, 255, 255, .92);
+      --edge: #dbe6f1;
+      --shadow: 0 16px 45px rgba(31, 61, 89, .11);
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      font-family: SeoulNamsan, "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(ellipse at 12% 15%, #fff 0, transparent 40%),
+                  radial-gradient(ellipse at 88% 70%, #c8e3ff 0, transparent 42%), var(--bg);
+      transition: background .25s, color .25s;
+    }
+    body.dark {
+      color-scheme: dark;
+      --bg: #111a29;
+      --ink: #f3f7ff;
+      --muted: #b4c3d4;
+      --glass: rgba(31, 44, 63, .92);
+      --line: rgba(125, 145, 170, .25);
+      --edge: #41516a;
+      --shadow: 0 16px 45px rgba(0, 0, 0, .22);
+      background: radial-gradient(ellipse at 85% 30%, #233e5e 0, transparent 48%), var(--bg);
+    }
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: 24px;
+    }
+    .topbar {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 22px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand { padding: 12px 18px; font-weight: 800; border-radius: 999px; }
+    .brand span { color: #377abf; margin-left: 4px; font-size: 12px; }
+    .theme-btn {
+      border: 1px solid var(--edge);
+      color: var(--ink);
+      padding: 12px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+    }
+    .theme-btn:focus-visible, .room:focus-visible {
+      outline: 3px solid #60a5fa;
+      outline-offset: 3px;
+    }
+    main {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 74px 22px 72px;
+    }
+    .eyebrow {
+      color: #3c86c7;
+      font-size: 12px;
+      letter-spacing: .16em;
+      font-weight: 800;
+    }
+    h1 {
+      font-size: clamp(30px, 5vw, 53px);
+      letter-spacing: -.045em;
+      line-height: 1.22;
+      margin: 13px 0 18px;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.8;
+      margin: 0 0 35px;
+    }
+    .rooms {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+    .room {
+      display: flex;
+      min-height: 225px;
+      padding: 29px;
+      flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
+      color: var(--ink);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .room:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 22px 50px rgba(27, 74, 120, .18);
+    }
+    .room-icon {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      border-radius: 19px;
+      background: linear-gradient(140deg, #d9edff, #f3f8ff);
+    }
+    .room:nth-child(2) .room-icon {
+      background: linear-gradient(140deg, #d6f4ef, #f2fffb);
+    }
+    .room:nth-child(3) .room-icon {
+      background: linear-gradient(140deg, #e5dfff, #f9f7ff);
+    }
+    .room:nth-child(4) .room-icon {
+      background: linear-gradient(140deg, #ffe9d5, #fff8f1);
+    }
+    .room h2 {
+      font-size: 24px;
+      margin: 18px 0 6px;
+    }
+    .room p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .room-bottom {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .arrow {
+     
