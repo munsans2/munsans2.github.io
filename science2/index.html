@@ -4,16 +4,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>문산중학교 | 과학실 2</title>
 
 <link rel="stylesheet" href="../common/style.css">
 
 <style>
-/* =========================================
-   과학실 2 전용 화면
-   공통 CSS와 충돌하지 않도록 설정
-   ========================================= */
+/* ========================================
+   과학실 2 전용 디자인
+   ======================================== */
+
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -25,13 +27,13 @@ body {
 
 .lab2-header {
   position: fixed;
-  top: 18px;
-  left: 18px;
-  right: 18px;
+  top: 16px;
+  left: 16px;
+  right: 16px;
   z-index: 30;
   display: flex;
-  gap: 10px;
   align-items: center;
+  gap: 9px;
   flex-wrap: wrap;
   pointer-events: none;
 }
@@ -44,25 +46,26 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+  padding: 10px 13px;
+  border: 1px solid rgba(210,225,240,.85);
+  border-radius: 18px;
   background: rgba(255,255,255,.94);
-  border: 1px solid rgba(210,225,240,.8);
-  border-radius: 20px;
-  padding: 12px 16px;
   box-shadow: 0 8px 28px rgba(45,80,120,.12);
   backdrop-filter: blur(18px);
 }
 
 .lab2-panel button,
 .lab2-panel a {
+  display: inline-block;
   border: 0;
-  border-radius: 12px;
-  padding: 9px 12px;
+  border-radius: 11px;
+  padding: 9px 11px;
   background: #edf4fa;
   color: #344b65;
-  cursor: pointer;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 12px;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .lab2-panel button.active {
@@ -70,96 +73,115 @@ body {
   color: white;
 }
 
-/* =========================================
+/* ========================================
    오른쪽 사이드바
-   ========================================= */
+   ======================================== */
 
 .lab2-sidebar {
   position: fixed;
-  top: 110px;
-  right: 18px;
-  bottom: 20px;
+  top: 100px;
+  right: 16px;
+  bottom: 18px;
   left: auto;
-  width: 300px;
   z-index: 25;
-  overflow: hidden;
-  padding: 20px;
+
+  width: 310px;
+  min-width: 0;
+  min-height: 0;
+
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  background: rgba(255,255,255,.95);
+
+  padding: 18px;
+  overflow: hidden;
+
   border: 1px solid #dbe5ef;
-  border-radius: 22px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.95);
   box-shadow: 0 12px 35px rgba(40,70,110,.12);
   backdrop-filter: blur(18px);
 }
 
 .lab2-sidebar h2 {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   font-size: 21px;
   flex-shrink: 0;
 }
 
 .lab2-subtitle {
-  font-size: 13px;
-  color: #71859a;
   margin: 0 0 14px;
+  font-size: 12px;
+  color: #71859a;
   flex-shrink: 0;
 }
 
-/* 검색 영역 */
+/* ========================================
+   검색 화면
+   ======================================== */
 
-.lab2-search-area {
+#searchArea {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
-.lab2-search-area[hidden] {
+#searchArea[hidden] {
   display: none !important;
 }
 
 #search {
   width: 100%;
   min-width: 0;
+  flex-shrink: 0;
   padding: 12px;
   border: 1px solid #ccdbe9;
-  border-radius: 12px;
-  box-sizing: border-box;
+  border-radius: 11px;
   background: white;
-  flex-shrink: 0;
+  font-size: 13px;
 }
 
 #results {
+  position: relative !important;
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  min-height: 0;
+  gap: 8px;
+
   flex: 1;
+  min-height: 0;
+  min-width: 0;
+
   margin-top: 10px;
-  padding-right: 2px;
+  padding: 0 3px 3px 0;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
 
 #results button {
   display: block;
   width: 100%;
   min-width: 0;
+  height: auto;
   flex-shrink: 0;
-  padding: 12px;
+
   margin: 0;
-  text-align: left;
+  padding: 11px 12px;
+
   border: 1px solid #d7e3f0;
-  border-radius: 12px;
-  background: #fff;
+  border-radius: 11px;
+  background: white;
   color: #344b65;
-  cursor: pointer;
+
+  text-align: left;
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: keep-all;
   line-height: 1.5;
+  cursor: pointer;
 }
 
 #results button:hover {
@@ -174,35 +196,42 @@ body {
 
 #results button small {
   display: block;
-  color: #71859a;
   margin-top: 4px;
   font-size: 11px;
-  line-height: 1.55;
+  line-height: 1.5;
+  color: #71859a;
+  overflow-wrap: anywhere;
 }
 
-/* =========================================
-   상세정보
-   중요: fixed 해제
-   ========================================= */
+/* ========================================
+   상세정보 화면
+   공통 CSS의 fixed 설정 완전 해제
+   ======================================== */
 
-#detail {
+.lab2-sidebar #detail {
   position: relative !important;
+
   top: auto !important;
   right: auto !important;
   bottom: auto !important;
   left: auto !important;
+  inset: auto !important;
 
-  display: flex;
-  flex-direction: column;
+  transform: none !important;
+
+  display: block;
   flex: 1;
+  min-width: 0;
   min-height: 0;
 
   width: 100% !important;
-  max-width: none !important;
+  max-width: 100% !important;
+  height: auto !important;
   max-height: none !important;
 
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 0 3px 0 0 !important;
+
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
@@ -210,11 +239,10 @@ body {
 
   overflow-y: auto !important;
   overflow-x: hidden !important;
-  z-index: auto !important;
-  backdrop-filter: none !important;
+  overscroll-behavior: contain;
 }
 
-#detail[hidden] {
+.lab2-sidebar #detail[hidden] {
   display: none !important;
 }
 
@@ -223,14 +251,14 @@ body {
   align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 10px;
-  flex-shrink: 0;
+  margin-bottom: 12px;
 }
 
 #detailTitle {
-  font-size: 17px;
   margin: 0;
-  line-height: 1.5;
+  min-width: 0;
+  font-size: 17px;
+  line-height: 1.45;
   overflow-wrap: anywhere;
   word-break: keep-all;
 }
@@ -238,68 +266,87 @@ body {
 #detailClose {
   flex-shrink: 0;
   border: 0;
-  padding: 8px 11px;
-  border-radius: 10px;
+  border-radius: 9px;
+  padding: 8px 10px;
   background: #e9f0f8;
   color: #344b65;
   cursor: pointer;
 }
 
+/* 보관장 기본 정보 */
+
 #detailMeta {
   display: block;
+  width: 100%;
+  margin: 0 0 14px;
+  padding: 0;
+
   font-size: 12px;
   line-height: 1.7;
   color: #64778c;
-  margin: 0 0 12px;
+
+  white-space: normal !important;
   overflow-wrap: anywhere;
   word-break: keep-all;
-  white-space: normal;
 }
 
-/* 선반별 목록 */
+/* 선반 목록 */
 
-#shelfList {
-  display: flex;
-  flex-direction: column;
+.lab2-sidebar #shelfList {
+  display: flex !important;
+  flex-direction: column !important;
   gap: 8px;
-  margin: 0 0 12px;
+
+  width: 100%;
   min-width: 0;
+  margin: 0 0 12px;
+  padding: 0;
 }
 
-#shelfList button {
-  display: block;
-  width: 100%;
-  height: auto;
+.lab2-sidebar #shelfList button {
+  position: relative !important;
+  display: block !important;
+
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
   min-height: 40px;
-  flex-shrink: 0;
+
+  margin: 0 !important;
   padding: 10px 12px;
-  margin: 0;
-  text-align: left;
+
   border: 1px solid #d3e0ef;
-  border-radius: 11px;
+  border-radius: 10px;
   background: #f4f8ff;
   color: #344b65;
-  cursor: pointer;
-  line-height: 1.6;
-  white-space: normal;
-  overflow-wrap: anywhere;
+
+  text-align: left;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
   word-break: keep-all;
+  line-height: 1.6 !important;
+
+  cursor: pointer;
 }
 
-#shelfList button.active {
+.lab2-sidebar #shelfList button.active {
   background: #d4e9ff;
   border-color: #3699fa;
 }
 
+/* 문 열기 버튼 */
+
 #doorToggle {
+  display: block;
   width: 100%;
-  flex-shrink: 0;
-  margin-top: 12px;
+  margin: 12px 0 0;
   padding: 12px;
+
   border: 0;
-  border-radius: 12px;
+  border-radius: 11px;
   background: #2878e8;
   color: white;
+
   font-weight: 700;
   cursor: pointer;
 }
@@ -309,22 +356,24 @@ body {
   cursor: not-allowed;
 }
 
-/* 하단 메뉴 */
+/* ========================================
+   하단 버튼
+   ======================================== */
 
 .lab2-bottom {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
+  bottom: 18px;
+  left: 18px;
   z-index: 20;
   display: flex;
-  gap: 8px;
+  gap: 7px;
 }
 
 .lab2-bottom button {
-  background: rgba(255,255,255,.92);
   border: 1px solid #d8e4ef;
-  padding: 12px;
-  border-radius: 12px;
+  border-radius: 11px;
+  padding: 11px;
+  background: rgba(255,255,255,.94);
   cursor: pointer;
 }
 
@@ -338,10 +387,11 @@ body {
   left: 50%;
   bottom: auto;
   transform: translate(-50%,-50%);
+  max-width: 90vw;
+  padding: 20px;
+  border-radius: 15px;
   background: white;
   color: #22354a;
-  padding: 24px;
-  border-radius: 16px;
 }
 
 /* 야간 모드 */
@@ -349,13 +399,13 @@ body {
 body.dark .lab2-panel,
 body.dark .lab2-sidebar {
   background: rgba(28,41,59,.96);
-  color: #e8f1fb;
   border-color: #42566d;
+  color: #e8f1fb;
 }
 
+body.dark #search,
 body.dark #results button,
 body.dark #shelfList button,
-body.dark #search,
 body.dark #detailClose {
   background: #334960;
   color: #edf5ff;
@@ -391,10 +441,10 @@ body.dark .lab2-subtitle {
 
   .lab2-sidebar {
     top: auto;
-    bottom: 8px;
     right: 8px;
+    bottom: 8px;
     left: auto;
-    width: min(300px, 82vw);
+    width: min(300px,82vw);
     height: 48vh;
     max-height: 48vh;
     padding: 13px;
@@ -419,6 +469,10 @@ body.dark .lab2-subtitle {
 </head>
 
 <body>
+
+<!-- ========================================
+     상단 메뉴
+     ======================================== -->
 
 <header class="lab2-header">
 
@@ -446,6 +500,10 @@ body.dark .lab2-subtitle {
 
 </header>
 
+<!-- ========================================
+     오른쪽 사이드바
+     ======================================== -->
+
 <aside class="lab2-sidebar">
 
   <h2>과학실 2</h2>
@@ -454,8 +512,9 @@ body.dark .lab2-subtitle {
     물리 · 화학 중심 실험실
   </p>
 
-  <!-- 검색 목록 화면 -->
-  <div id="searchArea" class="lab2-search-area">
+  <!-- 검색 화면 -->
+
+  <div id="searchArea">
 
     <input
       id="search"
@@ -467,7 +526,8 @@ body.dark .lab2-subtitle {
 
   </div>
 
-  <!-- 보관장 상세정보 화면 -->
+  <!-- 상세정보 화면 -->
+
   <section id="detail" hidden>
 
     <div class="lab2-detail-heading">
@@ -487,6 +547,8 @@ body.dark .lab2-subtitle {
 
 </aside>
 
+<!-- 하단 버튼 -->
+
 <div class="lab2-bottom">
   <button id="reset">초기화</button>
   <button id="fullscreen">전체화면</button>
@@ -495,19 +557,26 @@ body.dark .lab2-subtitle {
 
 <div id="notice"></div>
 
-<!-- Three.js -->
+<!-- ========================================
+     Three.js 및 공통 엔진
+     ======================================== -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
-<!-- 과학실 2 배치 -->
 <script src="./layout.js"></script>
 
-<!-- 공통 3D 엔진 -->
 <script src="../common/scene.js"></script>
 
-<!-- 검색 목록 / 상세정보 화면 전환 -->
+<!-- ========================================
+     검색 화면 ↔ 상세정보 화면 전환
+     ======================================== -->
+
 <script>
 (function () {
+  'use strict';
+
   const searchArea =
     document.getElementById('searchArea');
 
@@ -517,43 +586,65 @@ body.dark .lab2-subtitle {
   const results =
     document.getElementById('results');
 
-  const close =
+  const closeButton =
     document.getElementById('detailClose');
 
-  // 검색 결과 또는 3D 보관장을 클릭해
-  // 상세정보가 열리면 검색 목록 숨기기
+  if (!searchArea || !detail || !results) {
+    return;
+  }
 
-  const observer = new MutationObserver(() => {
-    if (!detail.hidden) {
-      searchArea.hidden = true;
-    } else {
-      searchArea.hidden = false;
+  function syncPanels() {
+    const isOpen = !detail.hidden;
+
+    searchArea.hidden = isOpen;
+
+    searchArea.style.setProperty(
+      'display',
+      isOpen ? 'none' : 'flex',
+      'important'
+    );
+
+    detail.style.setProperty(
+      'display',
+      isOpen ? 'block' : 'none',
+      'important'
+    );
+
+    if (isOpen) {
+      detail.scrollTop = 0;
     }
-  });
+  }
+
+  // scene.js가 detail.hidden 값을 바꾸면
+  // 자동으로 검색 화면과 상세 화면 전환
+
+  const observer = new MutationObserver(
+    syncPanels
+  );
 
   observer.observe(detail, {
     attributes: true,
     attributeFilter: ['hidden']
   });
 
-  // 검색 결과를 선택하면 상세정보가 열림
-  // 상세정보 상태를 확인해 목록 전환
+  // 검색 결과 클릭 시 상세 화면 전환
 
   results.addEventListener('click', () => {
-    requestAnimationFrame(() => {
-      if (!detail.hidden) {
-        searchArea.hidden = true;
-      }
-    });
+    requestAnimationFrame(syncPanels);
   });
 
-  // 닫기 버튼을 누르면 검색 목록 복귀
+  // 닫기 클릭 시 검색 화면 복귀
 
-  close.addEventListener('click', () => {
-    requestAnimationFrame(() => {
-      searchArea.hidden = false;
+  if (closeButton) {
+    closeButton.addEventListener('click', () => {
+      detail.hidden = true;
+      syncPanels();
     });
-  });
+  }
+
+  // 최초 화면은 검색 목록
+
+  syncPanels();
 
 })();
 </script>
