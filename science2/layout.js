@@ -272,6 +272,35 @@ window.MUNSAN_LAB_LAYOUT = {
   ],
 
   // 추후 기자재 등록
-  inventory: []
+  
+  inventory: [
+    {
+      cabinet: 'S2-L-G04',
+      shelf: 3,
+      shelves: [3, 4],
+      name: 'MBL 센서 보관 케이스',
+      quantity: 5,
+      unit: '개',
+      location: '상단 2칸 혼합 보관'
+    },
 
+    ...[
+      '전압 센서(MBL)',
+      '전류 센서(MBL)',
+      '힘 가속도 센서(MBL)',
+      '무선 온도 센서(MBL)',
+      '무선 산소 센서(MBL)',
+      '무선 이산화탄소 센서(MBL)',
+      '조도 센서(MBL)'
+    ].map(name => ({
+      cabinet: 'S2-L-G04',
+      shelf: 3,
+      shelves: [3, 4],
+      name,
+      quantity: null,
+      unit: '개',
+      location: '상단 2칸 혼합 보관',
+      keywords: ['MBL', '센서']
+    }))
+  ]
 };
