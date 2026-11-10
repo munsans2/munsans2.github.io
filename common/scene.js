@@ -300,7 +300,6 @@
         0, 3.10, 0, 1.20);
 }
 
- }
  function draw(){
   makeWalls();
   for(const d of config.doors||[])makeDoor(d);
