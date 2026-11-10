@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -71,38 +70,12 @@
       font: inherit;
       font-weight: 700;
     }
-    .theme-btn:focus-visible, .room:focus-visible {
-      outline: 3px solid #60a5fa;
-      outline-offset: 3px;
-    }
-    main {
-      max-width: 1050px;
-      margin: 0 auto;
-      padding: 74px 22px 72px;
-    }
-    .eyebrow {
-      color: #3c86c7;
-      font-size: 12px;
-      letter-spacing: .16em;
-      font-weight: 800;
-    }
-    h1 {
-      font-size: clamp(30px, 5vw, 53px);
-      letter-spacing: -.045em;
-      line-height: 1.22;
-      margin: 13px 0 18px;
-    }
-    .lead {
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.8;
-      margin: 0 0 35px;
-    }
-    .rooms {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-    }
+    .theme-btn:focus-visible, .room:focus-visible { outline: 3px solid #60a5fa; outline-offset: 3px; }
+    main { max-width: 1050px; margin: 0 auto; padding: 74px 22px 72px; }
+    .eyebrow { color: #3c86c7; font-size: 12px; letter-spacing: .16em; font-weight: 800; }
+    h1 { font-size: clamp(30px, 5vw, 53px); letter-spacing: -.045em; line-height: 1.22; margin: 13px 0 18px; }
+    .lead { color: var(--muted); font-size: 17px; line-height: 1.8; margin: 0 0 35px; }
+    .rooms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
     .room {
       display: flex;
       min-height: 225px;
@@ -113,43 +86,83 @@
       color: var(--ink);
       transition: transform .2s, box-shadow .2s;
     }
-    .room:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 22px 50px rgba(27, 74, 120, .18);
-    }
+    .room:hover { transform: translateY(-5px); box-shadow: 0 22px 50px rgba(27, 74, 120, .18); }
     .room-icon {
-      width: 58px;
-      height: 58px;
-      display: grid;
-      place-items: center;
-      font-size: 30px;
-      border-radius: 19px;
+      width: 58px; height: 58px; display: grid; place-items: center;
+      font-size: 30px; border-radius: 19px;
       background: linear-gradient(140deg, #d9edff, #f3f8ff);
     }
-    .room:nth-child(2) .room-icon {
-      background: linear-gradient(140deg, #d6f4ef, #f2fffb);
+    .room:nth-child(2) .room-icon { background: linear-gradient(140deg, #d6f4ef, #f2fffb); }
+    .room:nth-child(3) .room-icon { background: linear-gradient(140deg, #e5dfff, #f9f7ff); }
+    .room:nth-child(4) .room-icon { background: linear-gradient(140deg, #ffe9d5, #fff8f1); }
+    .room h2 { font-size: 24px; margin: 18px 0 6px; }
+    .room p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .room-bottom { display: flex; align-items: end; justify-content: space-between; gap: 10px; }
+    .arrow { font-size: 25px; color: #478ac7; }
+    .notice { margin: 30px 0 0; padding: 17px 20px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    footer { text-align: center; color: var(--muted); font-size: 12px; padding: 0 15px 28px; }
+    @media (max-width: 650px) {
+      .topbar { padding: 14px 14px 0; }
+      .brand { padding: 10px 13px; font-size: 12px; }
+      .theme-btn { padding: 10px 12px; font-size: 12px; }
+      main { padding: 56px 16px 50px; }
+      .lead { font-size: 14px; }
+      .rooms { grid-template-columns: 1fr; gap: 13px; }
+      .room { min-height: 170px; padding: 22px; }
+      .room h2 { font-size: 21px; margin: 12px 0 5px; }
+      .room-icon { width: 48px; height: 48px; font-size: 25px; }
     }
-    .room:nth-child(3) .room-icon {
-      background: linear-gradient(140deg, #e5dfff, #f9f7ff);
-    }
-    .room:nth-child(4) .room-icon {
-      background: linear-gradient(140deg, #ffe9d5, #fff8f1);
-    }
-    .room h2 {
-      font-size: 24px;
-      margin: 18px 0 6px;
-    }
-    .room p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    .room-bottom {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .arrow {
-     
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand glass">🔬 문산중학교 <span>SCIENCE VIRTUAL LAB</span></div>
+    <button class="theme-btn glass" type="button" id="themeBtn" aria-pressed="false">🌙 야간 모드</button>
+  </header>
+
+  <main>
+    <div class="eyebrow">3D SCIENCE LAB GUIDE</div>
+    <h1>우리 학교 과학실을<br />3D로 둘러보세요.</h1>
+    <p class="lead">공간을 선택하면 3D 배치도를 열 수 있습니다.<br />보관장을 클릭해 기자재와 내부 선반 위치를 확인하세요.</p>
+
+    <nav class="rooms" aria-label="과학실 공간 선택">
+      <a class="room glass" href="./science1/">
+        <div class="room-icon" aria-hidden="true">🔬</div>
+        <div class="room-bottom"><div><h2>과학실 1</h2><p>생명과학 · 화학<br />3D 기자재 배치도</p></div><span class="arrow" aria-hidden="true">↗</span></div>
+      </a>
+      <a class="room glass" href="./science2/">
+        <div class="room-icon" aria-hidden="true">⚛️</div>
+        <div class="room-bottom"><div><h2>과학실 2</h2><p>물리 · 화학<br />3D 기자재 배치도</p></div><span class="arrow" aria-hidden="true">↗</span></div>
+      </a>
+      <a class="room glass" href="./science3/">
+        <div class="room-icon" aria-hidden="true">🌍</div>
+        <div class="room-bottom"><div><h2>과학실 3</h2><p>지구과학 · 천문<br />3D 기자재 배치도</p></div><span class="arrow" aria-hidden="true">↗</span></div>
+      </a>
+      <a class="room glass" href="./prep/">
+        <div class="room-icon" aria-hidden="true">🗄️</div>
+        <div class="room-bottom"><div><h2>과학준비실</h2><p>기자재 보관 · 준비<br />3D 기자재 배치도</p></div><span class="arrow" aria-hidden="true">↗</span></div>
+      </a>
+    </nav>
+
+    <div class="notice glass">※ 배치도는 사진을 바탕으로 제작한 임시 모델입니다. 실제 기자재 보관 위치와 수량은 현장 확인 후 등록합니다. 공개 GitHub Pages에는 비공개 보안 정보를 올리지 마세요.</div>
+  </main>
+  <footer>문산중학교 과학실 · 3D 공간 및 기자재 안내</footer>
+
+  <script>
+    const themeBtn = document.getElementById('themeBtn');
+    const setDark = (dark) => {
+      document.body.classList.toggle('dark', dark);
+      themeBtn.textContent = dark ? '☀️ 주간 모드' : '🌙 야간 모드';
+      themeBtn.setAttribute('aria-pressed', String(dark));
+    };
+    let isDark = false;
+    try { isDark = localStorage.getItem('munsan-theme') === 'dark'; } catch (e) {}
+    setDark(isDark);
+    themeBtn.addEventListener('click', () => {
+      isDark = !isDark;
+      setDark(isDark);
+      try { localStorage.setItem('munsan-theme', isDark ? 'dark' : 'light'); } catch (e) {}
+    });
+  </script>
+</body>
+</html>
