@@ -208,14 +208,98 @@
     }
    }
   }
-  // 교사용 실험대
-  const t=config.teacher;
-  if(t){
-   const p=new T.Group();p.position.set(t.x,0,t.z);stage.add(p);
-   cube(p,t.width,.085,t.depth,0,.94,0,mats.white);
-   for(const xx of [-t.width*.44,t.width*.44])for(const zz of [-t.depth*.40,t.depth*.40])cube(p,.075,.89,.075,xx,.45,zz,mats.steel);
-   cube(p,t.width*.82,.52,.08,0,.58,-t.depth*.42,mats.white);
+ 
+  // 교사용 실험대 + 컴퓨터
+  const t = config.teacher;
+
+  if (t) {
+    const p = new T.Group();
+    p.position.set(t.x, 0, t.z);
+    stage.add(p);
+
+    // 기존 교사용 실험대
+    cube(p, t.width, .085, t.depth,
+         0, .94, 0, mats.white);
+
+    for (const xx of [-t.width*.44, t.width*.44]) {
+      for (const zz of [-t.depth*.40, t.depth*.40]) {
+        cube(p, .075, .89, .075,
+             xx, .45, zz, mats.steel);
+      }
+    }
+
+    cube(p, t.width*.82, .52, .08,
+         0, .58, -t.depth*.42, mats.white);
+
+    // 교사용 컴퓨터
+    const pcX = -Math.min(.43, t.width*.24);
+
+    // 모니터 테두리
+    cube(p, .61, .40, .065,
+         pcX, 1.38, -.08, mats.dark);
+
+    // 모니터 화면
+    cube(p, .54, .33, .012,
+         pcX, 1.38, -.12,
+         new T.MeshBasicMaterial({
+           color: 0x245477
+         }));
+
+    // 모니터 받침대
+    cube(p, .045, .17, .045,
+         pcX, 1.10, -.08, mats.steel);
+
+    cube(p, .30, .025, .20,
+         pcX, 1.01, -.08, mats.steelLight);
+
+    // 키보드
+    cube(p, .49, .025, .15,
+         pcX, .995, .23, mats.steelLight);
+
+    // 마우스
+    cube(p, .075, .035, .12,
+         pcX+.38, .995, .23, mats.white);
+
+    // 컴퓨터 본체
+    cube(p, .21, .42, .36,
+         t.width*.32, .26, -.08, mats.dark);
+
+    label(p, '교사용 컴퓨터',
+          pcX, 1.84, -.08, 1.25);
   }
+
+  // 전자칠판
+  const board = new T.Group();
+
+  // 교사 앞쪽 벽면 임시 위치
+  board.position.set(
+    Math.min(W/2-1.85, 2.0),
+    0,
+    D/2-.22
+  );
+
+  stage.add(board);
+
+  // 전자칠판 외곽
+  cube(board, 3.05, 1.76, .11,
+       0, 1.93, 0, mats.dark);
+
+  // 전자칠판 화면
+  cube(board, 2.88, 1.59, .018,
+       0, 1.93, -.068,
+       new T.MeshBasicMaterial({
+         color: 0x1b4967,
+         side: T.DoubleSide
+       }));
+
+  // 화면 하단 표시선
+  cube(board, 2.55, .025, .022,
+       0, 1.48, -.082, mats.blue);
+
+  label(board, '전자칠판',
+        0, 3.10, 0, 1.20);
+}
+
  }
  function draw(){
   makeWalls();
