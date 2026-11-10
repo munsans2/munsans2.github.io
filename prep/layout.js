@@ -49,15 +49,26 @@ window.PREP_LAYOUT = {
       width: 1.35, depth: 0.56,
       height: 2.10
     },
-    {
-      id: "P-CHEM",
-      name: "시약보관함",
-      kind: "chemical",
-      x: -3.56, z: -3.32,
-      rot: 90,
-      width: 1.35, depth: 0.62,
-      height: 2.35
-    },
+   
+{
+  id: "P-CHEM",
+  name: "시약보관함 1",
+  kind: "chemical",
+  x: -3.56, z: -3.32,
+  rot: 90,
+  width: 1.35, depth: 0.62,
+  height: 2.35
+},
+{
+  id: "P-CHEM02",
+  name: "시약보관함 2",
+  kind: "chemical",
+  x: -3.56, z: -1.90,
+  rot: 90,
+  width: 1.35, depth: 0.62,
+  height: 2.35
+},
+
 
     // 안쪽 벽
     {
