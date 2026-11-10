@@ -1542,6 +1542,28 @@
   search();
   frame();
 
+ draw();
+interactions();
+
+// ==========================================
+// 메인 화면 검색어 자동 연결
+// 과학실 1·2·3 및 과학준비실 공통
+// ==========================================
+
+function applyIncomingSearch() {
+  const params = new URLSearchParams(window.location.search);
+
+  const keyword =
+    params.get('search') ||
+    params.get('q') ||
+    params.get('keyword') ||
+    '';
+
+  const input = document.getElementById('search');
+
+  if (input && keyword.trim()) {
+    input.value = keyword.trim();
+  }
 })();
 
 
