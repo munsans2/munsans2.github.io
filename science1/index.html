@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -5,42 +6,168 @@
  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
  <meta name="theme-color" content="#eaf2fa">
  <title>과학실 1 · 문산중학교 3D 기자재 안내</title>
+
  <link rel="stylesheet" href="../common/style.css">
+
+ <style>
+ /*
+  과학실 1 검색 패널 오른쪽 정렬
+  공통 CSS보다 나중에 적용
+ */
+ #searchPanel{
+  position:fixed !important;
+  left:auto !important;
+  right:18px !important;
+  top:74px;
+  z-index:100;
+  width:225px;
+  max-height:calc(100vh - 155px);
+  overflow-y:auto;
+ }
+
+ /*
+  보관장 상세 패널이 검색창과 겹치지 않도록
+  기존 상세 패널은 왼쪽에 표시
+ */
+ #detail:not([hidden]){
+  position:fixed;
+  left:18px;
+  right:auto;
+  z-index:110;
+ }
+
+ @media(max-width:700px){
+  #searchPanel{
+   left:auto !important;
+   right:8px !important;
+   top:65px;
+   width:min(225px,70vw);
+   max-height:43vh;
+  }
+
+  #detail:not([hidden]){
+   left:8px;
+   right:auto;
+   max-width:75vw;
+  }
+ }
+ </style>
 </head>
+
 <body>
+
  <header class="topbar">
-  <a class="round glass" href="../index.html">← 메인</a>
-  <div class="brand glass"><strong>🔬 과학실 1</strong><span>문산중학교 · 3D 공간 안내</span><em>visionOS</em></div>
-  <button id="theme" class="round glass" aria-label="주간 야간 전환">🌙 야간 모드</button>
+  <a class="round glass" href="../index.html">
+   ← 메인
+  </a>
+
+  <div class="brand glass">
+   <strong>🔬 과학실 1</strong>
+   <span>문산중학교 · 3D 공간 안내</span>
+   <em>visionOS</em>
+  </div>
+
+  <button
+   id="theme"
+   class="round glass"
+   aria-label="주간 야간 전환">
+   🌙 야간 모드
+  </button>
  </header>
- <section id="searchPanel" class="glass" aria-label="보관장 검색">
+
+ <!-- 오른쪽 기자재 검색 패널 -->
+ <section
+  id="searchPanel"
+  class="glass"
+  aria-label="보관장 검색">
+
   <h2>과학실 1 기자재 찾기</h2>
+
   <p>안전용품·태블릿·보관장 번호 검색</p>
-  <input id="search" type="search" placeholder="검색어 입력" autocomplete="off" aria-label="검색어 입력">
+
+  <input
+   id="search"
+   type="search"
+   placeholder="검색어 입력"
+   autocomplete="off"
+   aria-label="검색어 입력">
+
   <div id="results" aria-live="polite"></div>
-  <small>사진 반영 임시 배치 · 번호는 시스템 관리용</small>
+
+  <small>
+   사진 반영 임시 배치 · 번호는 시스템 관리용
+  </small>
  </section>
- <section id="detail" class="glass" hidden aria-label="선택한 보관장">
-  <div class="detail-heading"><h2 id="detailTitle"></h2><button id="detailClose" aria-label="닫기">✕</button></div>
+
+ <!-- 보관장 상세정보 -->
+ <section
+  id="detail"
+  class="glass"
+  hidden
+  aria-label="선택한 보관장">
+
+  <div class="detail-heading">
+   <h2 id="detailTitle"></h2>
+
+   <button
+    id="detailClose"
+    aria-label="닫기">
+    ✕
+   </button>
+  </div>
+
   <div id="detailMeta"></div>
   <div id="shelfList"></div>
-  <button id="doorToggle" class="primary">보관장 문 열기</button>
+
+  <button id="doorToggle" class="primary">
+   보관장 문 열기
+  </button>
  </section>
- <div id="hint">마우스로 회전 · 휠 확대 · 보관장 클릭하여 문 열기</div>
+
+ <div id="hint">
+  마우스로 회전 · 휠 확대 · 보관장 클릭하여 문 열기
+ </div>
+
  <nav id="controls" class="glass">
-  <button data-view="overview" class="active">🏫 전체</button>
-  <button data-view="left">🗄 목재장</button>
-  <button data-view="back">🔬 유리장</button>
-  <button data-view="window">🪟 창가</button>
-  <button data-view="top">⬚ 평면</button>
-  <button id="reset">↻ 초기화</button>
-  <button id="fullscreen">⛶ 전체화면</button>
+  <button data-view="overview" class="active">
+   🏫 전체
+  </button>
+
+  <button data-view="left">
+   🗄 목재장
+  </button>
+
+  <button data-view="back">
+   🔬 유리장
+  </button>
+
+  <button data-view="window">
+   🪟 창가
+  </button>
+
+  <button data-view="top">
+   ⬚ 평면
+  </button>
+
+  <button id="reset">
+   ↻ 초기화
+  </button>
+
+  <button id="fullscreen">
+   ⛶ 전체화면
+  </button>
  </nav>
+
  <div id="notice" role="status"></div>
- <!-- 사용자 사진은 포함하거나 전송하지 않습니다. 3D 코드만 사용합니다. -->
+
+ <!-- 기존 Three.js 및 공통 엔진 유지 -->
  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
  <script src="./layout.js"></script>
+
  <script src="../common/scene.js"></script>
+
 </body>
 </html>
