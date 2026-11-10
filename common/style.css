@@ -517,3 +517,76 @@ body.dark #controls button.active {
     width: 270px;
   }
 }
+
+
+/* =========================================
+   보관장 상세정보와 검색 목록 겹침 방지
+   ========================================= */
+
+/* 검색 패널은 오른쪽에 고정 */
+#searchPanel {
+  left: auto !important;
+  right: 18px !important;
+  top: 82px !important;
+  bottom: 15px !important;
+  width: 300px !important;
+  max-height: none !important;
+  overflow: hidden !important;
+  z-index: 12 !important;
+}
+
+/* 검색 결과는 패널 내부에서만 스크롤 */
+#results {
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* 상세 패널은 왼쪽으로 분리 */
+#detail {
+  left: 18px !important;
+  right: auto !important;
+  top: 82px !important;
+  bottom: auto !important;
+  width: 330px !important;
+  max-height: calc(100vh - 165px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  z-index: 25 !important;
+}
+
+/* 긴 기자재 이름 줄바꿈 */
+#detailMeta,
+#shelfList,
+#shelfList button {
+  overflow-wrap: anywhere !important;
+  word-break: keep-all !important;
+  white-space: normal !important;
+  line-height: 1.65 !important;
+}
+
+/* 선택한 선반 버튼 */
+#shelfList button {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* 모바일에서는 상세 패널을 아래쪽에 배치 */
+@media (max-width: 680px) {
+  #searchPanel {
+    top: 63px !important;
+    right: 8px !important;
+    width: 231px !important;
+    bottom: auto !important;
+    max-height: 210px !important;
+  }
+
+  #detail {
+    top: auto !important;
+    left: 8px !important;
+    right: auto !important;
+    bottom: 67px !important;
+    width: min(310px, 85vw) !important;
+    max-height: 38vh !important;
+  }
+}
