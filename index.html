@@ -551,8 +551,8 @@ function renderSearch(){
  for(const item of matches){
   const a=document.createElement("a");
   a.className="result-item";
-  a.href=item.path+"index.html?search="+
-   encodeURIComponent(item.id||item.name);
+  a.href = item.path + "index.html?search=" +
+  encodeURIComponent(searchInput.value.trim());
 
   const title=document.createElement("strong");
   title.textContent=item.name;
