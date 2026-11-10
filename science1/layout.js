@@ -472,3 +472,11 @@ window.MUNSAN_LAB_LAYOUT = {
     // S1-D06, S1-D07은 물품 미등록
   ]
 };
+/* 보관장 기자재 위치 변경 */
+window.MUNSAN_LAB_LAYOUT.inventory.forEach(item => {
+  if (item.cabinet === 'S1-D04') {
+    item.cabinet = 'S1-D06';
+  } else if (item.cabinet === 'S1-D05') {
+    item.cabinet = 'S1-D07';
+  }
+});
