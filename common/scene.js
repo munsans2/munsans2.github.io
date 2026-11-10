@@ -1543,3 +1543,20 @@
   frame();
 
 })();
+
+
+draw();
+interactions();
+
+// 메인 화면 검색어 자동 전달
+const params = new URLSearchParams(window.location.search);
+const incomingSearch = params.get('search') || '';
+
+const roomSearch = document.getElementById('search');
+
+if (roomSearch && incomingSearch.trim()) {
+  roomSearch.value = incomingSearch.trim();
+}
+
+search();
+frame();
