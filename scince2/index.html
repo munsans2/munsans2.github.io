@@ -1,0 +1,729 @@
+
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>문산중학교 과학실 2</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,'Malgun Gothic',sans-serif;
+ color:#26384c;
+ background:#eaf2fa;
+ overflow:hidden
+}
+canvas{display:block}
+.bar{
+ position:fixed;
+ top:16px;left:16px;right:16px;
+ display:flex;gap:10px;flex-wrap:wrap;
+ z-index:2;pointer-events:none
+}
+.bar>*{pointer-events:auto}
+.pill{
+ background:#ffffffee;
+ border:1px solid #d6e2ee;
+ border-radius:22px;
+ padding:12px 17px;
+ box-shadow:0 5px 22px #54718b22;
+ font-weight:700
+}
+button{cursor:pointer;color:#294763}
+.pill button{
+ background:#f0f5fa;border:0;
+ border-radius:13px;
+ padding:8px 12px;
+ margin-left:5px
+}
+button:hover{background:#dcecff}
+.panel{
+ position:fixed;top:105px;right:16px;
+ width:290px;
+ max-height:calc(100vh - 120px);
+ overflow:auto;
+ background:#fffffff2;
+ border-radius:22px;
+ padding:18px;
+ box-shadow:0 5px 30px #54718b25;
+ z-index:2
+}
+.panel h2{margin:0 0 12px}
+.panel input{
+ width:100%;padding:11px;
+ border-radius:12px;
+ border:1px solid #b8cadc
+}
+.item{
+ display:block;width:100%;
+ padding:9px;text-align:left;
+ border:0;background:#f2f6fa;
+ border-radius:9px;margin-top:7px
+}
+.hint{
+ font-size:12px;color:#63788b;
+ line-height:1.6
+}
+.small{font-size:12px;color:#657b8d}
+.close{
+ float:right;border:0;
+ background:#eaf2fa;
+ border-radius:9px;
+ padding:6px 10px
+}
+@media(max-width:650px){
+ .bar{top:7px;left:7px;right:7px}
+ .pill{padding:8px;font-size:12px}
+ .pill button{padding:6px;margin-left:2px}
+ .panel{
+  top:auto;bottom:8px;right:8px;
+  width:min(270px,72vw);
+  max-height:44vh;padding:12px
+ }
+}
+</style>
+</head>
+<body>
+
+<div class="bar">
+ <div class="pill">⚗️ 문산중학교 과학실 2</div>
+ <div class="pill">
+  <button onclick="view('all')">전체보기</button>
+  <button onclick="view('left')">왼쪽</button>
+  <button onclick="view('back')">뒤쪽</button>
+  <button onclick="view('right')">오른쪽</button>
+  <button onclick="view('front')">앞쪽</button>
+ </div>
+ <div class="pill">
+  <button onclick="location.href='../index.html'">메인</button>
+ </div>
+</div>
+
+<div class="panel">
+ <button class="close" id="reset">초기화</button>
+ <h2>과학실 2</h2>
+ <div class="hint">
+  보관장을 클릭하면 상세 정보를 확인할 수 있습니다.
+  마우스 드래그: 회전 / 휠: 확대·축소
+ </div>
+ <p>
+  <input id="search" placeholder="보관장 검색 (예: 철제, 유리, 24칸)">
+ </p>
+ <div id="detail" class="small">보관장을 선택해 주세요.</div>
+ <button id="toggle" class="item" style="display:none">
+  문·서랍 열기 / 닫기
+ </button>
+ <div id="results"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+(()=>{
+'use strict';
+
+const T=THREE;
+const W=10.2,D=15.2,H=3.5;
+
+const scene=new T.Scene();
+scene.background=new T.Color('#eaf2fa');
+
+const camera=new T.PerspectiveCamera(
+ 44,innerWidth/innerHeight,.1,150
+);
+camera.position.set(12,12,18);
+
+const renderer=new T.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.outputEncoding=T.sRGBEncoding;
+document.body.insertBefore(renderer.domElement,document.body.firstChild);
+
+const controls=new T.OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;
+controls.target.set(0,.9,0);
+controls.minDistance=2;
+controls.maxDistance=40;
+controls.maxPolarAngle=Math.PI/2-.02;
+
+scene.add(new T.HemisphereLight(0xffffff,0xb2c3d2,1.25));
+const light=new T.DirectionalLight(0xffffff,.75);
+light.position.set(-5,12,8);
+scene.add(light);
+
+const mat=c=>new T.MeshLambertMaterial({color:c});
+const M={
+ wall:mat('#f4f6f8'),
+ floor:mat('#e1e8ed'),
+ wood:mat('#b78d60'),
+ wood2:mat('#d6b38b'),
+ white:mat('#e9eef2'),
+ metal:mat('#a9b9c7'),
+ dark:mat('#30475c'),
+ blue:mat('#4584bc'),
+ chair:mat('#88a2b3'),
+ glass:new T.MeshBasicMaterial({
+  color:'#b7dfea',
+  transparent:true,
+  opacity:.48,
+  depthWrite:false,
+  side:T.DoubleSide
+ })
+};
+
+const root=new T.Group();
+scene.add(root);
+
+const selectable=[];
+const cabs=[];
+let selected=null;
+
+function box(parent,w,h,d,x,y,z,m,id){
+ const o=new T.Mesh(new T.BoxGeometry(w,h,d),m);
+ o.position.set(x,y,z);
+ parent.add(o);
+ if(id){
+  o.userData.id=id;
+  selectable.push(o);
+ }
+ return o;
+}
+
+function tag(parent,text,x,y,z,width=1.1){
+ const c=document.createElement('canvas');
+ c.width=512;c.height=96;
+ const ctx=c.getContext('2d');
+ ctx.fillStyle='#fffffff2';
+ ctx.fillRect(0,0,512,96);
+ ctx.strokeStyle='#bed2e4';
+ ctx.lineWidth=5;
+ ctx.strokeRect(3,3,506,90);
+ ctx.fillStyle='#304c65';
+ ctx.font='bold 33px sans-serif';
+ ctx.textAlign='center';
+ ctx.textBaseline='middle';
+ ctx.fillText(text,256,48,480);
+ const sprite=new T.Sprite(new T.SpriteMaterial({
+  map:new T.CanvasTexture(c),
+  depthTest:false
+ }));
+ sprite.position.set(x,y,z);
+ sprite.scale.set(width,.23,1);
+ parent.add(sprite);
+}
+
+// 기본 바닥과 벽
+box(root,W,.12,D,0,-.09,0,M.floor);
+const grid=new T.GridHelper(D,34,0xcad5df,0xcad5df);
+grid.scale.x=W/D;
+grid.position.y=.005;
+root.add(grid);
+
+// 앞쪽 z=+D/2, 뒤쪽 z=-D/2
+box(root,W,H,.09,0,H/2,-D/2,M.wall);
+box(root,W,1.12,.09,0,.56,D/2,M.wall);
+
+// 왼쪽 벽의 출입문 공간
+// 실제 출입문 중심과 벽 개구부를 일치시킴
+const openings=[
+ {z:-4.2,w:1.3},
+ {z:5.2,w:1.3}
+];
+
+let edge=-D/2;
+for(const opening of openings){
+ const start=opening.z-opening.w/2;
+ if(start>edge){
+  box(root,.09,1.12,start-edge,
+   -W/2,.56,(edge+start)/2,M.wall);
+ }
+ edge=opening.z+opening.w/2;
+}
+if(edge<D/2){
+ box(root,.09,1.12,D/2-edge,
+  -W/2,.56,(edge+D/2)/2,M.wall);
+}
+
+box(root,.09,1.12,D,W/2,.56,0,M.wall);
+
+// 오른쪽 창문
+for(const z of [-5.6,-2.2,1.2,4.6]){
+ box(root,.04,1.35,2.5,
+  W/2-.08,2.05,z,M.glass);
+ for(const dz of [-1.25,1.25]){
+  box(root,.08,1.45,.05,
+   W/2-.09,2.05,z+dz,M.metal);
+ }
+}
+
+// 출입문 생성
+function door(z,name){
+ const g=new T.Group();
+ g.position.set(-W/2+.12,0,z);
+ g.rotation.y=Math.PI/2;
+ root.add(g);
+
+ box(g,.08,2.3,.1,-.65,1.15,0,M.wood);
+ box(g,.08,2.3,.1,.65,1.15,0,M.wood);
+ box(g,1.4,.09,.1,0,2.3,0,M.wood);
+
+ const p=new T.Group();
+ p.position.set(-.65,0,0);
+ g.add(p);
+
+ box(p,1.23,2.15,.06,.615,1.075,0,M.wood);
+ box(p,.65,.88,.07,.615,1.55,.04,M.glass);
+
+ tag(g,name,0,2.64,0,1.25);
+}
+
+// 24칸 목재장 다음 출입문 1
+door(5.2,'출입문 1');
+// 목재장 1개 다음 출입문 2
+door(-4.2,'출입문 2');
+
+// 공통 보관장 생성
+function cabinet({
+ id,name,x,z,rot=0,
+ w=.78,h=1.05,d=.5,
+ kind='metal2',rows=2,cols=1
+}){
+ const g=new T.Group();
+ g.position.set(x,0,z);
+ g.rotation.y=rot*Math.PI/180;
+ root.add(g);
+
+ const base=
+  kind==='wood'||kind==='wood24'
+  ?M.wood
+  :kind==='glass'?M.white:M.metal;
+
+ box(g,w,h,.045,0,h/2,-d/2,base,id);
+ box(g,.045,h,d,-w/2,h/2,0,base,id);
+ box(g,.045,h,d,w/2,h/2,0,base,id);
+ box(g,w,.06,d,0,.03,0,base,id);
+ box(g,w,.06,d,0,h-.03,0,base,id);
+
+ const moving=[];
+
+ if(kind==='wood24'){
+  // 4열 x 6행, 개방형 24칸 목재장
+  // 문과 서랍 앞판 없음
+  for(let r=1;r<6;r++){
+   box(g,w-.07,.032,d-.045,
+    0,r*h/6,0,M.wood2,id);
+  }
+  for(let c=1;c<4;c++){
+   box(g,.032,h-.08,d-.045,
+    -w/2+c*w/4,h/2,0,M.wood2,id);
+  }
+
+ }else if(kind==='glass'){
+  for(let j=1;j<4;j++){
+   box(g,w-.07,.03,d-.08,
+    0,j*h/4,0,M.white,id);
+  }
+  for(let i=0;i<2;i++){
+   const p=new T.Group();
+   p.position.set((i-.5)*w/2,0,d/2);
+   g.add(p);
+
+   box(p,w/2-.04,h-.10,.025,
+    0,h/2,0,M.glass,id);
+   box(p,.03,.16,.05,
+    i===0?w/4-.10:-w/4+.10,
+    h/2,.04,M.metal,id);
+   moving.push(p);
+  }
+
+ }else if(kind==='wood'){
+  for(let i=0;i<2;i++){
+   const p=new T.Group();
+   p.position.set(i===0?-w/2:w/2,0,d/2);
+   g.add(p);
+   box(p,w/2-.05,h-.08,.035,
+    i===0?w/4-.025:-w/4+.025,
+    h/2,0,M.wood,id);
+   moving.push(p);
+  }
+
+ }else{
+  for(let r=0;r<rows;r++){
+   for(let c=0;c<cols;c++){
+    const p=new T.Group();
+    p.position.set(
+     (c+.5-cols/2)*w/cols,
+     (r+.5)*h/rows,d/2
+    );
+    g.add(p);
+    box(p,w/cols-.025,h/rows-.028,.04,
+     0,0,0,M.metal,id);
+    box(p,Math.min(.15,w/cols*.45),.022,.055,
+     0,0,.04,M.dark,id);
+    moving.push(p);
+   }
+  }
+ }
+
+ tag(g,id,0,h+.21,0,
+  kind==='wood24'?1.4:1.04);
+
+ const obj={
+  id,name,g,moving,kind,w,d,
+  open:0,target:0
+ };
+ cabs.push(obj);
+ return obj;
+}
+
+// ========================================
+// 왼쪽 벽 배치
+// 화면 왼쪽 끝부터 다음 순서
+// 24칸 목재장
+// 출입문 1
+// 유리장 4개
+// 철제 2단 2개
+// 목재장 1개
+// 출입문 2
+// ========================================
+
+// 1. 왼쪽 끝 개방형 24칸 목재장
+cabinet({
+ id:'S2-L-24',
+ name:'24칸 개방형 목재 수납장 (4열×6행)',
+ x:-4.73,z:6.65,
+ rot:90,
+ w:1.25,h:2.15,d:.56,
+ kind:'wood24',
+ rows:6,cols:4
+});
+
+// 2. 출입문 1은 z=5.2
+
+// 3. 유리 수납장 4개
+for(let i=0;i<4;i++){
+ cabinet({
+  id:'S2-L-G'+(i+1),
+  name:'왼쪽 유리 수납장 '+(i+1),
+  x:-4.75,
+  z:3.85-i*1.03,
+  rot:90,
+  w:.96,h:2.15,d:.5,
+  kind:'glass'
+ });
+}
+
+// 4. 미니 철제 2단 서랍장 2개
+for(let i=0;i<2;i++){
+ cabinet({
+  id:'S2-L-M'+(i+1),
+  name:'왼쪽 철제 2단 서랍장 '+(i+1),
+  x:-4.75,
+  z:-.20-i*.85,
+  rot:90,
+  w:.74,h:1.0,d:.5,
+  kind:'metal2'
+ });
+}
+
+// 5. 목재 서랍장 1개
+cabinet({
+ id:'S2-L-W',
+ name:'왼쪽 목재 서랍장',
+ x:-4.75,z:-2.25,
+ rot:90,
+ w:1.2,h:1.12,d:.52,
+ kind:'wood'
+});
+
+// 6. 출입문 2는 z=-4.2
+
+// ========================================
+// 뒤쪽 벽
+// 동일한 2단 철제 서랍장 4개
+// ========================================
+for(let i=0;i<4;i++){
+ cabinet({
+  id:'S2-B-M'+(i+1),
+  name:'뒤쪽 철제 2단 서랍장 '+(i+1),
+  x:-2.55+i*1.62,
+  z:-7.12,
+  rot:0,
+  w:1.32,h:1.05,d:.55,
+  kind:'metal2'
+ });
+}
+
+// ========================================
+// 오른쪽 벽
+// 2단 서랍장 8개 = 총 16칸
+// ========================================
+for(let i=0;i<8;i++){
+ cabinet({
+  id:'S2-R-M'+(i+1),
+  name:'오른쪽 2단 서랍장 '+(i+1),
+  x:4.74,
+  z:-6.25+i*1.72,
+  rot:-90,
+  w:1.48,h:1.02,d:.53,
+  kind:'metal2'
+ });
+}
+
+// ========================================
+// 중앙 학생 실험대
+// 2열 x 4행
+// ========================================
+for(const z of [-4.6,-1.6,1.4,4.4]){
+ for(const x of [-1.55,1.45]){
+  const g=new T.Group();
+  g.position.set(x,0,z);
+  root.add(g);
+
+  box(g,2.2,.08,1.1,0,.81,0,M.white);
+
+  for(const xx of [-.92,.92]){
+   for(const zz of [-.42,.42]){
+    box(g,.07,.77,.07,
+     xx,.39,zz,M.metal);
+   }
+  }
+
+  box(g,1.8,.4,.06,
+   0,.55,-.43,M.white);
+
+  for(const xx of [-.6,.6]){
+   for(const side of [-1,1]){
+    box(g,.36,.05,.35,
+     xx,.47,side*.85,M.chair);
+    box(g,.36,.30,.05,
+     xx,.68,side*1.02,M.chair);
+
+    for(const lx of [-.13,.13]){
+     for(const lz of [-.12,.12]){
+      box(g,.035,.44,.035,
+       xx+lx,.22,
+       side*.85+lz,M.metal);
+     }
+    }
+   }
+  }
+ }
+}
+
+// ========================================
+// 앞쪽 교사용 실험대 + 컴퓨터
+// ========================================
+const teach=new T.Group();
+teach.position.set(0,0,5.65);
+root.add(teach);
+
+// 교사용 책상
+box(teach,2.8,.09,1.05,0,.94,0,M.white);
+
+for(const xx of [-1.15,1.15]){
+ for(const zz of [-.42,.42]){
+  box(teach,.07,.88,.07,
+   xx,.44,zz,M.metal);
+ }
+}
+
+// 모니터
+box(teach,.61,.4,.06,
+ -.43,1.38,-.08,M.dark);
+
+// 모니터 화면
+box(teach,.54,.32,.012,
+ -.43,1.38,-.12,
+ new T.MeshBasicMaterial({color:'#245477'}));
+
+// 모니터 받침대
+box(teach,.05,.17,.05,
+ -.43,1.1,-.08,M.metal);
+
+box(teach,.29,.025,.18,
+ -.43,1.01,-.08,M.metal);
+
+// 키보드
+box(teach,.48,.025,.15,
+ -.43,1.0,.23,M.metal);
+
+// 마우스
+box(teach,.08,.035,.12,
+ -.02,1.0,.23,M.white);
+
+// 컴퓨터 본체
+box(teach,.2,.42,.35,
+ .96,.25,-.08,M.dark);
+
+tag(teach,'교사용 컴퓨터',
+ -.43,1.85,0,1.3);
+
+// ========================================
+// 전자칠판
+// ========================================
+const board=new T.Group();
+board.position.set(0,0,D/2-.22);
+root.add(board);
+
+box(board,3.1,1.75,.1,
+ 0,1.93,0,M.dark);
+
+box(board,2.89,1.58,.014,
+ 0,1.93,-.065,
+ new T.MeshBasicMaterial({color:'#1b4967'}));
+
+tag(board,'전자칠판',0,3.09,0,1.3);
+
+// ========================================
+// 검색, 선택, 서랍 열기
+// ========================================
+const $=id=>document.getElementById(id);
+
+function select(c){
+ selected=c;
+ $('detail').textContent=
+  c.name+' · 관리번호 '+c.id;
+ $('toggle').style.display='block';
+
+ const p=c.g.position;
+ controls.target.set(
+  p.x,
+  Math.min(1.4,c.kind==='glass'?1.2:.65),
+  p.z
+ );
+ camera.position.set(
+  p.x+2.4,2.9,p.z+3.3
+ );
+ controls.update();
+}
+
+function results(){
+ const q=$('search').value.trim().toLowerCase();
+ $('results').replaceChildren();
+
+ for(const c of cabs.filter(c=>
+  (c.name+' '+c.id).toLowerCase().includes(q)
+ )){
+  const b=document.createElement('button');
+  b.className='item';
+  b.textContent=c.name;
+  b.onclick=()=>select(c);
+  $('results').append(b);
+ }
+}
+
+$('search').addEventListener('input',results);
+
+$('toggle').onclick=()=>{
+ if(selected){
+  selected.target=selected.target?0:1;
+ }
+};
+
+$('reset').onclick=()=>{
+ selected=null;
+ $('detail').textContent='보관장을 선택해 주세요.';
+ $('toggle').style.display='none';
+ view('all');
+};
+
+// 3D 보관장 클릭
+const ray=new T.Raycaster();
+const pointer=new T.Vector2();
+let down=null;
+
+renderer.domElement.addEventListener(
+ 'pointerdown',e=>{
+  down=[e.clientX,e.clientY];
+ }
+);
+
+renderer.domElement.addEventListener(
+ 'pointerup',e=>{
+  if(!down)return;
+
+  if(Math.hypot(
+   e.clientX-down[0],
+   e.clientY-down[1]
+  )>5)return;
+
+  pointer.set(
+   e.clientX/innerWidth*2-1,
+   -e.clientY/innerHeight*2+1
+  );
+  ray.setFromCamera(pointer,camera);
+
+  const hit=ray.intersectObjects(selectable,false)[0];
+
+  if(hit){
+   const c=cabs.find(c=>
+    c.id===hit.object.userData.id
+   );
+   if(c)select(c);
+  }
+ }
+);
+
+// 카메라 방향
+window.view=which=>{
+ const poses={
+  all:[12,12,18],
+  left:[-11,7,4],
+  back:[0,8,-14],
+  right:[12,7,3],
+  front:[0,7,15]
+ };
+ camera.position.set(...poses[which]);
+ controls.target.set(0,1,0);
+ controls.update();
+};
+
+addEventListener('resize',()=>{
+ camera.aspect=innerWidth/innerHeight;
+ camera.updateProjectionMatrix();
+ renderer.setSize(innerWidth,innerHeight);
+});
+
+// 서랍 애니메이션
+const clock=new T.Clock();
+
+function frame(){
+ requestAnimationFrame(frame);
+
+ const dt=Math.min(.06,clock.getDelta());
+
+ for(const c of cabs){
+  c.open+=(c.target-c.open)*Math.min(1,dt*8);
+
+  if(c.kind==='glass'){
+   c.moving.forEach((p,i)=>{
+    p.position.x=
+     (i-.5)*c.w/2+
+     (i===0?1:-1)*c.w*.38*c.open;
+   });
+  }else if(c.kind==='wood'){
+   c.moving.forEach((p,i)=>{
+    p.rotation.y=
+     (i===0?1:-1)*1.25*c.open;
+   });
+  }else if(c.kind!=='wood24'){
+   c.moving.forEach(p=>{
+    p.position.z=c.d/2+.30*c.open;
+   });
+  }
+ }
+
+ controls.update();
+ renderer.render(scene,camera);
+}
+
+results();
+frame();
+
+})();
+</script>
+</body>
+</html>
