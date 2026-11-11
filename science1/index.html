@@ -3,52 +3,46 @@
 <html lang="ko">
 <head>
  <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+ <meta name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover">
  <meta name="theme-color" content="#eaf2fa">
+
  <title>과학실 1 · 문산중학교 3D 기자재 안내</title>
 
  <link rel="stylesheet" href="../common/style.css">
 
  <style>
- /*
-  과학실 1 검색 패널 오른쪽 정렬
-  공통 CSS보다 나중에 적용
- */
- #searchPanel{
-  position:fixed !important;
-  left:auto !important;
-  right:18px !important;
-  top:74px;
-  z-index:100;
-  width:225px;
-  max-height:calc(100vh - 155px);
-  overflow-y:auto;
+ #searchPanel {
+  position: fixed !important;
+  left: auto !important;
+  right: 18px !important;
+  top: 74px;
+  z-index: 100;
+  width: 225px;
+  max-height: calc(100vh - 155px);
+  overflow-y: auto;
  }
 
- /*
-  보관장 상세 패널이 검색창과 겹치지 않도록
-  기존 상세 패널은 왼쪽에 표시
- */
- #detail:not([hidden]){
-  position:fixed;
-  left:18px;
-  right:auto;
-  z-index:110;
+ #detail:not([hidden]) {
+  position: fixed;
+  left: 18px;
+  right: auto;
+  z-index: 110;
  }
 
- @media(max-width:700px){
-  #searchPanel{
-   left:auto !important;
-   right:8px !important;
-   top:65px;
-   width:min(225px,70vw);
-   max-height:43vh;
+ @media (max-width:700px) {
+  #searchPanel {
+   left: auto !important;
+   right: 8px !important;
+   top: 65px;
+   width: min(225px,70vw);
+   max-height: 43vh;
   }
 
-  #detail:not([hidden]){
-   left:8px;
-   right:auto;
-   max-width:75vw;
+  #detail:not([hidden]) {
+   left: 8px;
+   right: auto;
+   max-width: 75vw;
   }
  }
  </style>
@@ -75,7 +69,6 @@
   </button>
  </header>
 
- <!-- 오른쪽 기자재 검색 패널 -->
  <section
   id="searchPanel"
   class="glass"
@@ -99,7 +92,6 @@
   </small>
  </section>
 
- <!-- 보관장 상세정보 -->
  <section
   id="detail"
   class="glass"
@@ -129,6 +121,7 @@
  </div>
 
  <nav id="controls" class="glass">
+
   <button data-view="overview" class="active">
    🏫 전체
   </button>
@@ -156,17 +149,21 @@
   <button id="fullscreen">
    ⛶ 전체화면
   </button>
+
  </nav>
 
  <div id="notice" role="status"></div>
 
- <!-- 기존 Three.js 및 공통 엔진 유지 -->
  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
  <script src="./layout.js"></script>
 
+ <!-- 과학실 1 전용 기자재 모형 -->
+ <script src="./contents.js?v=3"></script>
+
+ <!-- 기존 공통 엔진 그대로 사용 -->
  <script src="../common/scene.js"></script>
 
 </body>
