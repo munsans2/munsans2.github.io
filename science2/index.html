@@ -2,652 +2,167 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>문산중학교 | 과학실 2</title>
-
-<link rel="stylesheet" href="../common/style.css">
-
-<style>
-/* ========================================
-   과학실 2 전용 디자인
-   ======================================== */
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: SeoulNamsan, "Pretendard",
-    "Malgun Gothic", sans-serif;
-}
-
-/* 상단 메뉴 */
-
-.lab2-header {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  right: 16px;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  flex-wrap: wrap;
-  pointer-events: none;
-}
-
-.lab2-header > * {
-  pointer-events: auto;
-}
-
-.lab2-panel {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 13px;
-  border: 1px solid rgba(210,225,240,.85);
-  border-radius: 18px;
-  background: rgba(255,255,255,.94);
-  box-shadow: 0 8px 28px rgba(45,80,120,.12);
-  backdrop-filter: blur(18px);
-}
-
-.lab2-panel button,
-.lab2-panel a {
-  display: inline-block;
-  border: 0;
-  border-radius: 11px;
-  padding: 9px 11px;
-  background: #edf4fa;
-  color: #344b65;
-  text-decoration: none;
-  font-size: 12px;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.lab2-panel button.active {
-  background: #2878e8;
-  color: white;
-}
-
-/* ========================================
-   오른쪽 사이드바
-   ======================================== */
-
-.lab2-sidebar {
-  position: fixed;
-  top: 100px;
-  right: 16px;
-  bottom: 18px;
-  left: auto;
-  z-index: 25;
-
-  width: 310px;
-  min-width: 0;
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  padding: 18px;
-  overflow: hidden;
-
-  border: 1px solid #dbe5ef;
-  border-radius: 20px;
-  background: rgba(255,255,255,.95);
-  box-shadow: 0 12px 35px rgba(40,70,110,.12);
-  backdrop-filter: blur(18px);
-}
-
-.lab2-sidebar h2 {
-  margin: 0 0 6px;
-  font-size: 21px;
-  flex-shrink: 0;
-}
-
-.lab2-subtitle {
-  margin: 0 0 14px;
-  font-size: 12px;
-  color: #71859a;
-  flex-shrink: 0;
-}
-
-/* ========================================
-   검색 화면
-   ======================================== */
-
-#searchArea {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  min-width: 0;
-  overflow: hidden;
-}
-
-#searchArea[hidden] {
-  display: none !important;
-}
-
-#search {
-  width: 100%;
-  min-width: 0;
-  flex-shrink: 0;
-  padding: 12px;
-  border: 1px solid #ccdbe9;
-  border-radius: 11px;
-  background: white;
-  font-size: 13px;
-}
-
-#results {
-  position: relative !important;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  flex: 1;
-  min-height: 0;
-  min-width: 0;
-
-  margin-top: 10px;
-  padding: 0 3px 3px 0;
-
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-}
-
-#results button {
-  display: block;
-  width: 100%;
-  min-width: 0;
-  height: auto;
-  flex-shrink: 0;
-
-  margin: 0;
-  padding: 11px 12px;
-
-  border: 1px solid #d7e3f0;
-  border-radius: 11px;
-  background: white;
-  color: #344b65;
-
-  text-align: left;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: keep-all;
-  line-height: 1.5;
-  cursor: pointer;
-}
-
-#results button:hover {
-  background: #eaf4ff;
-  border-color: #7cb7fa;
-}
-
-#results button strong {
-  display: block;
-  font-size: 13px;
-}
-
-#results button small {
-  display: block;
-  margin-top: 4px;
-  font-size: 11px;
-  line-height: 1.5;
-  color: #71859a;
-  overflow-wrap: anywhere;
-}
-
-/* ========================================
-   상세정보 화면
-   공통 CSS의 fixed 설정 완전 해제
-   ======================================== */
-
-.lab2-sidebar #detail {
-  position: relative !important;
-
-  top: auto !important;
-  right: auto !important;
-  bottom: auto !important;
-  left: auto !important;
-  inset: auto !important;
-
-  transform: none !important;
-
-  display: block;
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-
-  width: 100% !important;
-  max-width: 100% !important;
-  height: auto !important;
-  max-height: none !important;
-
-  margin: 0 !important;
-  padding: 0 3px 0 0 !important;
-
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  background: transparent !important;
-
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  overscroll-behavior: contain;
-}
-
-.lab2-sidebar #detail[hidden] {
-  display: none !important;
-}
-
-.lab2-detail-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-#detailTitle {
-  margin: 0;
-  min-width: 0;
-  font-size: 17px;
-  line-height: 1.45;
-  overflow-wrap: anywhere;
-  word-break: keep-all;
-}
-
-#detailClose {
-  flex-shrink: 0;
-  border: 0;
-  border-radius: 9px;
-  padding: 8px 10px;
-  background: #e9f0f8;
-  color: #344b65;
-  cursor: pointer;
-}
-
-/* 보관장 기본 정보 */
-
-#detailMeta {
-  display: block;
-  width: 100%;
-  margin: 0 0 14px;
-  padding: 0;
-
-  font-size: 12px;
-  line-height: 1.7;
-  color: #64778c;
-
-  white-space: normal !important;
-  overflow-wrap: anywhere;
-  word-break: keep-all;
-}
-
-/* 선반 목록 */
-
-.lab2-sidebar #shelfList {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px;
-
-  width: 100%;
-  min-width: 0;
-  margin: 0 0 12px;
-  padding: 0;
-}
-
-.lab2-sidebar #shelfList button {
-  position: relative !important;
-  display: block !important;
-
-  width: 100% !important;
-  min-width: 0 !important;
-  height: auto !important;
-  min-height: 40px;
-
-  margin: 0 !important;
-  padding: 10px 12px;
-
-  border: 1px solid #d3e0ef;
-  border-radius: 10px;
-  background: #f4f8ff;
-  color: #344b65;
-
-  text-align: left;
-  white-space: normal !important;
-  overflow-wrap: anywhere !important;
-  word-break: keep-all;
-  line-height: 1.6 !important;
-
-  cursor: pointer;
-}
-
-.lab2-sidebar #shelfList button.active {
-  background: #d4e9ff;
-  border-color: #3699fa;
-}
-
-/* 문 열기 버튼 */
-
-#doorToggle {
-  display: block;
-  width: 100%;
-  margin: 12px 0 0;
-  padding: 12px;
-
-  border: 0;
-  border-radius: 11px;
-  background: #2878e8;
-  color: white;
-
-  font-weight: 700;
-  cursor: pointer;
-}
-
-#doorToggle:disabled {
-  background: #cbd5df;
-  cursor: not-allowed;
-}
-
-/* ========================================
-   하단 버튼
-   ======================================== */
-
-.lab2-bottom {
-  position: fixed;
-  bottom: 18px;
-  left: 18px;
-  z-index: 20;
-  display: flex;
-  gap: 7px;
-}
-
-.lab2-bottom button {
-  border: 1px solid #d8e4ef;
-  border-radius: 11px;
-  padding: 11px;
-  background: rgba(255,255,255,.94);
-  cursor: pointer;
-}
-
-/* 알림 */
-
-#notice {
-  display: none;
-  position: fixed;
-  z-index: 100;
-  top: 50%;
-  left: 50%;
-  bottom: auto;
-  transform: translate(-50%,-50%);
-  max-width: 90vw;
-  padding: 20px;
-  border-radius: 15px;
-  background: white;
-  color: #22354a;
-}
-
-/* 야간 모드 */
-
-body.dark .lab2-panel,
-body.dark .lab2-sidebar {
-  background: rgba(28,41,59,.96);
-  border-color: #42566d;
-  color: #e8f1fb;
-}
-
-body.dark #search,
-body.dark #results button,
-body.dark #shelfList button,
-body.dark #detailClose {
-  background: #334960;
-  color: #edf5ff;
-  border-color: #4c6279;
-}
-
-body.dark #detailMeta,
-body.dark .lab2-subtitle {
-  color: #b8c8d8;
-}
-
-/* 모바일 */
-
-@media (max-width: 700px) {
-  .lab2-header {
-    top: 8px;
-    left: 8px;
-    right: 8px;
-    gap: 5px;
-  }
-
-  .lab2-panel {
-    padding: 7px;
-    gap: 4px;
-    border-radius: 13px;
-  }
-
-  .lab2-panel button,
-  .lab2-panel a {
-    padding: 7px 9px;
-    font-size: 11px;
-  }
-
-  .lab2-sidebar {
-    top: auto;
-    right: 8px;
-    bottom: 8px;
-    left: auto;
-    width: min(300px,82vw);
-    height: 48vh;
-    max-height: 48vh;
-    padding: 13px;
-  }
-
-  .lab2-sidebar h2 {
-    font-size: 17px;
-  }
-
-  .lab2-bottom {
-    bottom: 8px;
-    left: 8px;
-    gap: 4px;
-  }
-
-  .lab2-bottom button {
-    padding: 9px;
-    font-size: 11px;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eaf2fa">
+
+  <title>과학실 2 · 문산중학교 3D 기자재 안내</title>
+
+  <link rel="stylesheet" href="../common/style.css">
+
+  <style>
+    #searchPanel {
+      position: fixed !important;
+      left: auto !important;
+      right: 18px !important;
+      top: 74px;
+      z-index: 100;
+      width: 225px;
+      max-height: calc(100vh - 155px);
+      overflow-y: auto;
+    }
+
+    #detail:not([hidden]) {
+      position: fixed;
+      left: 18px;
+      right: auto;
+      z-index: 110;
+    }
+
+    @media (max-width:700px) {
+      #searchPanel {
+        left: auto !important;
+        right: 8px !important;
+        top: 65px;
+        width: min(225px,70vw);
+        max-height: 43vh;
+      }
+
+      #detail:not([hidden]) {
+        left: 8px;
+        right: auto;
+        max-width: 75vw;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- ========================================
-     상단 메뉴
-     ======================================== -->
+  <header class="topbar">
+    <a class="round glass" href="../index.html">
+      ← 메인
+    </a>
 
-<header class="lab2-header">
+    <div class="brand glass">
+      <strong>⚛️ 과학실 2</strong>
+      <span>문산중학교 · 3D 공간 안내</span>
+      <em>visionOS</em>
+    </div>
 
-  <div class="lab2-panel">
-    ⚗️
-    <strong>문산중학교 3D 과학실 안내</strong>
-    <a href="../index.html">메인</a>
-  </div>
-
-  <div class="lab2-panel">
-    <a href="../science1/index.html">과학실 1</a>
-    <button class="active">과학실 2</button>
-    <a href="../science3/index.html">과학실 3</a>
-  </div>
-
-  <div class="lab2-panel">
-    <button data-view="overview" class="active">
-      전체보기
+    <button
+      id="theme"
+      class="round glass"
+      aria-label="주간 야간 전환">
+      🌙 야간 모드
     </button>
-    <button data-view="left">왼쪽</button>
-    <button data-view="back">뒤쪽</button>
-    <button data-view="window">창가</button>
-    <button data-view="top">위에서</button>
-  </div>
+  </header>
 
-</header>
+  <section
+    id="searchPanel"
+    class="glass"
+    aria-label="보관장 검색">
 
-<!-- ========================================
-     오른쪽 사이드바
-     ======================================== -->
+    <h2>과학실 2 기자재 찾기</h2>
 
-<aside class="lab2-sidebar">
-
-  <h2>과학실 2</h2>
-
-  <p class="lab2-subtitle">
-    물리 · 화학 중심 실험실
-  </p>
-
-  <!-- 검색 화면 -->
-
-  <div id="searchArea">
+    <p>전원장치·렌즈·안전용품·MBL 등 검색</p>
 
     <input
       id="search"
       type="search"
-      placeholder="보관장 · 기자재 검색"
-    >
+      placeholder="검색어 입력"
+      autocomplete="off"
+      aria-label="검색어 입력">
 
-    <div id="results"></div>
+    <div id="results" aria-live="polite"></div>
 
-  </div>
-
-  <!-- 상세정보 화면 -->
-
-  <section id="detail" hidden>
-
-    <div class="lab2-detail-heading">
-      <h3 id="detailTitle"></h3>
-      <button id="detailClose">닫기</button>
-    </div>
-
-    <p id="detailMeta"></p>
-
-    <div id="shelfList"></div>
-
-    <button id="doorToggle">
-      보관장 문 열기
-    </button>
-
+    <small>
+      선반 위치 일부 임시 배치 · 번호는 시스템 관리용
+    </small>
   </section>
 
-</aside>
+  <section
+    id="detail"
+    class="glass"
+    hidden
+    aria-label="선택한 보관장">
 
-<!-- 하단 버튼 -->
+    <div class="detail-heading">
+      <h2 id="detailTitle"></h2>
 
-<div class="lab2-bottom">
-  <button id="reset">초기화</button>
-  <button id="fullscreen">전체화면</button>
-  <button id="theme">🌙 야간 모드</button>
-</div>
+      <button
+        id="detailClose"
+        aria-label="닫기">
+        ✕
+      </button>
+    </div>
 
-<div id="notice"></div>
+    <div id="detailMeta"></div>
+    <div id="shelfList"></div>
 
-<!-- ========================================
-     Three.js 및 공통 엔진
-     ======================================== -->
+    <button id="doorToggle" class="primary">
+      보관장 문 열기
+    </button>
+  </section>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <div id="hint">
+    마우스로 회전 · 휠 확대 · 보관장 클릭하여 문 열기
+  </div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <nav id="controls" class="glass">
+    <button data-view="overview" class="active">
+      🏫 전체
+    </button>
 
-<script src="./layout.js"></script>
+    <button data-view="left">
+      🗄 왼쪽
+    </button>
 
-<script src="../common/scene.js"></script>
+    <button data-view="back">
+      🔬 뒤쪽
+    </button>
 
-<!-- ========================================
-     검색 화면 ↔ 상세정보 화면 전환
-     ======================================== -->
+    <button data-view="window">
+      🪟 창가
+    </button>
 
-<script>
-(function () {
-  'use strict';
+    <button data-view="top">
+      ⬚ 평면
+    </button>
 
-  const searchArea =
-    document.getElementById('searchArea');
+    <button id="reset">
+      ↻ 초기화
+    </button>
 
-  const detail =
-    document.getElementById('detail');
+    <button id="fullscreen">
+      ⛶ 전체화면
+    </button>
+  </nav>
 
-  const results =
-    document.getElementById('results');
+  <div id="notice" role="status"></div>
 
-  const closeButton =
-    document.getElementById('detailClose');
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-  if (!searchArea || !detail || !results) {
-    return;
-  }
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
-  function syncPanels() {
-    const isOpen = !detail.hidden;
+  <script src="./layout.js"></script>
 
-    searchArea.hidden = isOpen;
+  <!-- 과학실 2 기자재 목록 및 3D 모형 -->
+  <script src="./contents.js?v=1"></script>
 
-    searchArea.style.setProperty(
-      'display',
-      isOpen ? 'none' : 'flex',
-      'important'
-    );
-
-    detail.style.setProperty(
-      'display',
-      isOpen ? 'block' : 'none',
-      'important'
-    );
-
-    if (isOpen) {
-      detail.scrollTop = 0;
-    }
-  }
-
-  // scene.js가 detail.hidden 값을 바꾸면
-  // 자동으로 검색 화면과 상세 화면 전환
-
-  const observer = new MutationObserver(
-    syncPanels
-  );
-
-  observer.observe(detail, {
-    attributes: true,
-    attributeFilter: ['hidden']
-  });
-
-  // 검색 결과 클릭 시 상세 화면 전환
-
-  results.addEventListener('click', () => {
-    requestAnimationFrame(syncPanels);
-  });
-
-  // 닫기 클릭 시 검색 화면 복귀
-
-  if (closeButton) {
-    closeButton.addEventListener('click', () => {
-      detail.hidden = true;
-      syncPanels();
-    });
-  }
-
-  // 최초 화면은 검색 목록
-
-  syncPanels();
-
-})();
-</script>
+  <!-- 기존 공통 엔진: 절대 수정하지 않음 -->
+  <script src="../common/scene.js"></script>
 
 </body>
 </html>
