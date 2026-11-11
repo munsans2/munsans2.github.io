@@ -54,9 +54,9 @@ window.addEventListener('error',function(e){
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script src="./layout.js?v=20261111d" onerror="window.MUNSAN_PREP_ERRORS.push('prep/layout.js 파일을 찾지 못함')"></script>
+<script src="./layout.js?v=20261111e" onerror="window.MUNSAN_PREP_ERRORS.push('prep/layout.js 파일을 찾지 못함')"></script>
 
-<!-- 이 파일 안에서 원래 준비실 배치 형식을 공통 3D 엔진에 연결합니다. -->
+<!-- 기존 준비실 배치 호환 로직: 그대로 보존 -->
 <script>
 (() => {
   'use strict';
@@ -179,15 +179,247 @@ window.addEventListener('error',function(e){
 })();
 </script>
 
+<!-- 다섯 가지 수정 중 ① 출입문: 다른 보관장 좌표는 수정하지 않습니다. -->
+<script>
+(() => {
+  'use strict';
+  const L = window.MUNSAN_LAB_LAYOUT;
+  if (!L) return;
+  const doors = Array.isArray(L.doors) ? L.doors : [];
+
+  // 구형 출입문 데이터의 z 좌표를 공통 엔진에서 읽는 center로 보정
+  L.doors = doors.map((d, i) => {
+    if (Array.isArray(d)) {
+      return {
+        id: 'P-ENTRY-' + (i + 1),
+        wall: 'left', center: Number(d[0]) || 3.82,
+        width: Number(d[1]) || 1.16, label: '출입문'
+      };
+    }
+    return {
+      ...d,
+      id: d.id || 'P-ENTRY-' + (i + 1),
+      wall: d.wall || 'left',
+      center: Number.isFinite(Number(d.center))
+        ? Number(d.center)
+        : (Number.isFinite(Number(d.z)) ? Number(d.z) : 3.82),
+      width: Number(d.width) || 1.16,
+      label: '출입문'
+    };
+  });
+
+  // 기존 배치에 문이 없다면 과거 확인된 위치에 1개 추가
+  if (!L.doors.some(d => d.wall === 'left' && Math.abs(d.center - 3.82) < .8)) {
+    L.doors.push({
+      id: 'P-ENTRY', wall: 'left',
+      center: 3.82, width: 1.16, label: '출입문'
+    });
+  }
+})();
+</script>
+
+<!-- 기존 contents.js 실행 후 공통 엔진의 무대를 한 번만 참조합니다. -->
 <!-- 기존 준비실 기자재 3D 모형 파일은 보존합니다. -->
-<script src="./contents.js?v=20261111d" onerror="window.MUNSAN_PREP_ERRORS.push('prep/contents.js 파일을 찾지 못함')"></script>
+<script src="./contents.js?v=20261111e" onerror="window.MUNSAN_PREP_ERRORS.push('prep/contents.js 파일을 찾지 못함')"></script>
 <script>
 try {
  const q=new URLSearchParams(location.search).get('search');
  if(q) document.getElementById('search').value=q;
 } catch(e) {}
 </script>
-<script src="../common/scene.js?v=20261111d" onerror="window.MUNSAN_PREP_ERRORS.push('common/scene.js 파일을 찾지 못함')"></script>
+<script>
+(() => {
+  'use strict';
+  const T = window.THREE;
+  if (!T) return;
+  const proto = T.Scene.prototype;
+  const ownAdd = Object.prototype.hasOwnProperty.call(proto, 'add');
+  const priorAdd = proto.add;
+  const realAdd = T.Object3D.prototype.add;
+
+  proto.add = function (...objects) {
+    const result = (priorAdd || realAdd).apply(this, objects);
+    if (!window.MUNSAN_PREP_STAGE) {
+      const stage = objects.find(o => o && o.isGroup);
+      if (stage) window.MUNSAN_PREP_STAGE = stage;
+    }
+    return result;
+  };
+
+  window.MUNSAN_PREP_RESTORE_STAGE_HOOK = () => {
+    if (ownAdd) proto.add = priorAdd;
+    else delete proto.add;
+  };
+})();
+</script>
+<script src="../common/scene.js?v=20261111e" onerror="window.MUNSAN_PREP_ERRORS.push('common/scene.js 파일을 찾지 못함')"></script>
+<!-- ② 냉장고 ③ 노란 폐수통 ④ 뒤쪽 창문 ⑤ 전자칠판 삭제 -->
+<script>
+(() => {
+  'use strict';
+  window.MUNSAN_PREP_RESTORE_STAGE_HOOK?.();
+  const T = window.THREE;
+  const L = window.MUNSAN_LAB_LAYOUT;
+  const stage = window.MUNSAN_PREP_STAGE;
+  if (!T || !L || !stage) {
+    console.warn('[준비실 5개 수정] 3D 무대를 찾지 못했습니다.');
+    return;
+  }
+  try {
+    const W = L.room.width, D = L.room.depth, H = L.room.height;
+    const backZ = -D / 2;
+    const mat = (hex, transparent = false) => new T.MeshLambertMaterial({
+      color: hex, transparent,
+      opacity: transparent ? .48 : 1,
+      depthWrite: !transparent,
+      side: transparent ? T.DoubleSide : T.FrontSide
+    });
+    const m = {
+      wall: mat(0xf4f6f7),
+      silver: mat(0x8da0af), white: mat(0xe9f0f3),
+      steel: mat(0xa7b6c2), dark: mat(0x303d4a),
+      yellow: mat(0xf2c943), yellowLid: mat(0xe0a529),
+      green: mat(0x25876f), glass: mat(0x9cd8ee, true)
+    };
+    const box = (parent, w, h, d, x, y, z, material) => {
+      const mesh = new T.Mesh(new T.BoxGeometry(w, h, d), material);
+      mesh.position.set(x, y, z);
+      parent.add(mesh);
+      return mesh;
+    };
+    const cylinder = (parent, r, h, x, y, z, material) => {
+      const mesh = new T.Mesh(new T.CylinderGeometry(r, r, h, 16), material);
+      mesh.position.set(x, y, z);
+      parent.add(mesh);
+      return mesh;
+    };
+    const tag = (parent, value, x, y, z, width = .9) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 384; canvas.height = 90;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.fillStyle = 'rgba(255,255,255,.94)';
+      ctx.fillRect(5, 7, 374, 76);
+      ctx.strokeStyle = '#bdcedd';
+      ctx.strokeRect(5, 7, 374, 76);
+      ctx.fillStyle = '#293e53';
+      ctx.font = 'bold 35px sans-serif';
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'center';
+      ctx.fillText(value, 192, 44, 355);
+      const sprite = new T.Sprite(new T.SpriteMaterial({
+        map: new T.CanvasTexture(canvas), depthTest: false, transparent: true
+      }));
+      sprite.position.set(x, y, z);
+      sprite.scale.set(width, .22, 1);
+      sprite.renderOrder = 901;
+      parent.add(sprite);
+    };
+
+    // ⑤ 기존 전자칠판: 공통 엔진이 생성한 전자칠판 그룹만 숨김
+    // 뒤쪽 게시판이나 다른 장비는 삭제하지 않습니다.
+    for (const child of stage.children) {
+      if (!child.isGroup) continue;
+      const hasElectronicBoard = child.children.some(mesh => {
+        const p = mesh.geometry && mesh.geometry.parameters;
+        return p && Math.abs(p.width - 3.05) < .002
+          && Math.abs(p.height - 1.76) < .002
+          && Math.abs(p.depth - .11) < .002;
+      });
+      if (hasElectronicBoard) child.visible = false;
+    }
+
+    // ④ 뒤쪽 벽에 실제 창틀과 개구부 표시 (기존 다른 벽·보관장 유지)
+    const windowWidth = 1.10;
+    const windowBottom = 1.14;
+    const windowHeight = 1.22;
+    const windowTop = windowBottom + windowHeight;
+    const windowX = 0;
+    const leftEdge = windowX - windowWidth / 2;
+    const rightEdge = windowX + windowWidth / 2;
+
+    // 공통 엔진의 뒤쪽 '통벽'만 찾아 분할벽으로 교체합니다.
+    let foundBackWall = false;
+    for (const child of stage.children) {
+      if (!child.isMesh || !child.geometry) continue;
+      const p = child.geometry.parameters || {};
+      if (Math.abs(child.position.z - backZ) < .01 &&
+          Math.abs(p.width - W) < .01 &&
+          Math.abs(p.height - H) < .01 &&
+          Math.abs(p.depth - .10) < .01) {
+        child.visible = false;
+        foundBackWall = true;
+      }
+    }
+
+    if (foundBackWall) {
+      const leftWidth = W / 2 + leftEdge;
+      const rightWidth = W / 2 - rightEdge;
+      box(stage, leftWidth, H, .10,
+          (-W / 2 + leftEdge) / 2, H / 2, backZ, m.wall);
+      box(stage, rightWidth, H, .10,
+          (rightEdge + W / 2) / 2, H / 2, backZ, m.wall);
+      box(stage, windowWidth, windowBottom, .10,
+          windowX, windowBottom / 2, backZ, m.wall);
+      box(stage, windowWidth, H - windowTop, .10,
+          windowX, (H + windowTop) / 2, backZ, m.wall);
+    }
+
+    // 유리창과 창틀은 벽보다 실내 방향에 배치
+    const glassZ = backZ + .10;
+    box(stage, windowWidth - .09, windowHeight - .09, .018,
+        windowX, windowBottom + windowHeight / 2, glassZ, m.glass);
+    for (const x of [leftEdge, rightEdge]) {
+      box(stage, .07, windowHeight + .06, .10,
+          x, windowBottom + windowHeight / 2, glassZ + .012, m.steel);
+    }
+    for (const y of [windowBottom, windowTop]) {
+      box(stage, windowWidth + .07, .07, .11,
+          windowX, y, glassZ + .012, m.steel);
+    }
+    box(stage, .04, windowHeight, .06,
+        windowX, windowBottom + windowHeight / 2, glassZ + .024, m.steel);
+    box(stage, windowWidth, .05, .12,
+        windowX, windowBottom + .08, glassZ + .03, m.white);
+    tag(stage, '창문', windowX, windowTop + .24, glassZ + .06, .80);
+
+    // ② 냉장고: 과거 준비실 배치에서 확인한 뒤쪽 왼쪽 위치
+    const fridge = new T.Group();
+    fridge.position.set(-1.40, 0, backZ + .48);
+    stage.add(fridge);
+    box(fridge, .80, 1.98, .72, 0, .99, 0, m.silver);
+    box(fridge, .72, 1.24, .03, 0, .69, .375, m.white);
+    box(fridge, .72, .60, .03, 0, 1.62, .375, m.white);
+    box(fridge, .024, .36, .05, .27, .99, .43, m.dark);
+    box(fridge, .024, .19, .05, .27, 1.67, .43, m.dark);
+    box(fridge, .70, .055, .035, 0, .07, .375, m.steel);
+    tag(fridge, '냉장고', 0, 2.27, .18, .90);
+
+    // ③ 폐수통: 과거 준비실 배치에서 확인한 뒤쪽 오른쪽 위치
+    const waste = new T.Group();
+    waste.position.set(1.31, 0, backZ + .43);
+    stage.add(waste);
+    box(waste, 1.00, .09, .56, 0, .045, 0, m.steel);
+    for (const x of [-.23, .23]) {
+      cylinder(waste, .19, .65, x, .40, 0, m.yellow);
+      cylinder(waste, .21, .045, x, .75, 0, m.yellowLid);
+      cylinder(waste, .046, .045, x, .79, 0, m.dark);
+      box(waste, .12, .13, .012, x, .39, .195, m.white);
+    }
+    tag(waste, '폐수통', 0, 1.04, .06, .93);
+
+    console.info('[준비실] 출입문·냉장고·폐수통·창문 표시, 전자칠판 숨김 적용');
+  } catch (err) {
+    console.error('[준비실 5개 수정 실패]', err);
+    const el = document.getElementById('prepStatus');
+    if (el) {
+      el.textContent = '준비실 추가 모형 오류: ' + err.message;
+      el.style.display = 'block';
+    }
+  }
+})();
+</script>
+
 <script>
 window.addEventListener('load',() => {
   const status=document.getElementById('prepStatus');
