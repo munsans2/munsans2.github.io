@@ -3,17 +3,15 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#eaf2f9">
 <title>문산중학교 | 3D 과학실 기자재 안내</title>
-
 <style>
 @font-face{
  font-family:SeoulNamsan;
  src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/SeoulNamsanM.woff") format("woff");
  font-display:swap;
 }
-
 :root{
  color-scheme:light;
  --bg:#eaf2f9;
@@ -24,21 +22,16 @@
  --edge:#dbe6f1;
  --shadow:0 16px 45px rgba(31,61,89,.11);
 }
-
 *{box-sizing:border-box}
-
 body{
- min-height:100vh;
- margin:0;
- color:var(--ink);
+ min-height:100vh;margin:0;color:var(--ink);
  font-family:SeoulNamsan,"Noto Sans KR",sans-serif;
  background:
-  radial-gradient(ellipse at 12% 15%,#fff 0,transparent 40%),
-  radial-gradient(ellipse at 88% 70%,#c8e3ff 0,transparent 42%),
-  var(--bg);
+ radial-gradient(ellipse at 12% 15%,#fff 0,transparent 40%),
+ radial-gradient(ellipse at 88% 70%,#c8e3ff 0,transparent 42%),
+ var(--bg);
  transition:background .25s,color .25s;
 }
-
 body.dark{
  color-scheme:dark;
  --bg:#111a29;
@@ -48,11 +41,8 @@ body.dark{
  --line:rgba(125,145,170,.25);
  --edge:#41516a;
  --shadow:0 16px 45px rgba(0,0,0,.22);
- background:
-  radial-gradient(ellipse at 85% 30%,#233e5e 0,transparent 48%),
-  var(--bg);
+ background:radial-gradient(ellipse at 85% 30%,#233e5e 0,transparent 48%),var(--bg);
 }
-
 .glass{
  background:var(--glass);
  backdrop-filter:blur(22px);
@@ -61,7 +51,6 @@ body.dark{
  box-shadow:var(--shadow);
  border-radius:24px;
 }
-
 .topbar{
  max-width:1120px;
  margin:0 auto;
@@ -72,19 +61,16 @@ body.dark{
  gap:12px;
  flex-wrap:wrap;
 }
-
 .brand{
  padding:12px 18px;
  font-weight:800;
  border-radius:999px;
 }
-
 .brand span{
  color:#377abf;
  margin-left:4px;
  font-size:12px;
 }
-
 .theme-btn{
  border:1px solid var(--edge);
  color:var(--ink);
@@ -94,7 +80,6 @@ body.dark{
  font:inherit;
  font-weight:700;
 }
-
 .theme-btn:focus-visible,
 .room:focus-visible,
 #globalSearch:focus-visible{
@@ -102,12 +87,12 @@ body.dark{
  outline-offset:3px;
 }
 
+/* 상단 통합 검색 */
 .search-wrap{
  position:relative;
  width:min(310px,100%);
  z-index:30;
 }
-
 .search-box{
  display:flex;
  align-items:center;
@@ -115,9 +100,7 @@ body.dark{
  padding:7px 13px;
  border-radius:999px;
 }
-
 .search-box span{font-size:17px}
-
 #globalSearch{
  width:100%;
  min-width:0;
@@ -129,24 +112,17 @@ body.dark{
  font:inherit;
  font-size:13px;
 }
-
-#globalSearch::placeholder{
- color:var(--muted);
-}
-
+#globalSearch::placeholder{color:var(--muted)}
 #globalResults{
  position:absolute;
  top:calc(100% + 9px);
- left:0;
- right:0;
+ left:0;right:0;
  max-height:320px;
  overflow:auto;
  padding:9px;
  border-radius:18px;
 }
-
 #globalResults[hidden]{display:none}
-
 .result-item{
  display:block;
  width:100%;
@@ -161,28 +137,29 @@ body.dark{
  cursor:pointer;
  font:inherit;
 }
-
-.result-item:hover{
- background:rgba(111,162,215,.16);
-}
-
+.result-item:hover{background:rgba(111,162,215,.16)}
 .result-item strong{
  display:block;
  font-size:13px;
 }
-
 .result-item small{
  display:block;
  margin-top:4px;
  color:var(--muted);
  font-size:11px;
 }
-
 .result-status{
  padding:12px;
  color:var(--muted);
  font-size:12px;
  line-height:1.6;
+}
+.search-close{
+ border:0;
+ background:transparent;
+ color:var(--muted);
+ cursor:pointer;
+ font-size:17px;
 }
 
 main{
@@ -190,34 +167,29 @@ main{
  margin:0 auto;
  padding:74px 22px 72px;
 }
-
 .eyebrow{
  color:#3c86c7;
  font-size:12px;
  letter-spacing:.16em;
  font-weight:800;
 }
-
 h1{
  font-size:clamp(30px,5vw,53px);
  letter-spacing:-.045em;
  line-height:1.22;
  margin:13px 0 18px;
 }
-
 .lead{
  color:var(--muted);
  font-size:17px;
  line-height:1.8;
  margin:0 0 35px;
 }
-
 .rooms{
  display:grid;
  grid-template-columns:repeat(2,minmax(0,1fr));
  gap:20px;
 }
-
 .room{
  display:flex;
  min-height:225px;
@@ -228,58 +200,43 @@ h1{
  color:var(--ink);
  transition:transform .2s,box-shadow .2s;
 }
-
 .room:hover{
  transform:translateY(-5px);
  box-shadow:0 22px 50px rgba(27,74,120,.18);
 }
-
 .room-icon{
- width:58px;
- height:58px;
- display:grid;
- place-items:center;
+ width:58px;height:58px;
+ display:grid;place-items:center;
  font-size:30px;
  border-radius:19px;
  background:linear-gradient(140deg,#d9edff,#f3f8ff);
 }
-
 .room:nth-child(2) .room-icon{
  background:linear-gradient(140deg,#d6f4ef,#f2fffb);
 }
-
 .room:nth-child(3) .room-icon{
  background:linear-gradient(140deg,#e5dfff,#f9f7ff);
 }
-
 .room:nth-child(4) .room-icon{
  background:linear-gradient(140deg,#ffe9d5,#fff8f1);
 }
-
 .room h2{
  font-size:24px;
  margin:18px 0 6px;
 }
-
 .room p{
  margin:0;
  color:var(--muted);
  font-size:14px;
  line-height:1.6;
 }
-
 .room-bottom{
  display:flex;
  align-items:end;
  justify-content:space-between;
  gap:10px;
 }
-
-.arrow{
- font-size:25px;
- color:#478ac7;
-}
-
+.arrow{font-size:25px;color:#478ac7}
 .notice{
  margin:30px 0 0;
  padding:17px 20px;
@@ -287,19 +244,20 @@ h1{
  font-size:13px;
  line-height:1.7;
 }
-
 footer{
  text-align:center;
  color:var(--muted);
  font-size:12px;
  padding:0 15px 28px;
 }
-
 @media(max-width:650px){
  .topbar{padding:14px 14px 0}
  .brand{padding:10px 13px;font-size:12px}
  .theme-btn{padding:10px 12px;font-size:12px}
- .search-wrap{width:100%;order:3}
+ .search-wrap{
+  width:100%;
+  order:3;
+ }
  main{padding:56px 16px 50px}
  .lead{font-size:14px}
  .rooms{grid-template-columns:1fr;gap:13px}
@@ -309,7 +267,6 @@ footer{
 }
 </style>
 </head>
-
 <body>
 
 <header class="topbar">
@@ -321,7 +278,6 @@ footer{
  <div class="search-wrap">
   <div class="search-box glass">
    <span aria-hidden="true">🔍</span>
-
    <input
     id="globalSearch"
     type="search"
@@ -331,34 +287,26 @@ footer{
     aria-controls="globalResults"
     aria-expanded="false">
   </div>
-
   <div id="globalResults" class="glass" hidden></div>
  </div>
 
  <button class="theme-btn glass"
-  type="button"
-  id="themeBtn"
-  aria-pressed="false">
+         type="button"
+         id="themeBtn"
+         aria-pressed="false">
   🌙 야간 모드
  </button>
 </header>
 
 <main>
- <div class="eyebrow">
-  3D SCIENCE LAB GUIDE
- </div>
-
- <h1>
-  우리 학교 과학실을<br>3D로 둘러보세요.
- </h1>
-
+ <div class="eyebrow">3D SCIENCE LAB GUIDE</div>
+ <h1>우리 학교 과학실을<br>3D로 둘러보세요.</h1>
  <p class="lead">
   공간을 선택하면 3D 배치도를 열 수 있습니다.<br>
   보관장을 클릭해 기자재와 내부 선반 위치를 확인하세요.
  </p>
 
  <nav class="rooms" aria-label="과학실 공간 선택">
-
   <a class="room glass" href="./science1/index.html">
    <div class="room-icon" aria-hidden="true">🔬</div>
    <div class="room-bottom">
@@ -402,7 +350,6 @@ footer{
     <span class="arrow" aria-hidden="true">↗</span>
    </div>
   </a>
-
  </nav>
 
  <div class="notice glass">
@@ -416,377 +363,236 @@ footer{
  문산중학교 과학실 · 3D 공간 및 기자재 안내
 </footer>
 
-<!-- 메인 통합 검색에도 Three.js를 불러옴 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
 <script>
 "use strict";
 
-// 주간 / 야간 모드
-const themeBtn = document.getElementById("themeBtn");
-
-const setDark = dark => {
- document.body.classList.toggle("dark", dark);
-
- themeBtn.textContent = dark
-  ? "☀️ 주간 모드"
-  : "🌙 야간 모드";
-
- themeBtn.setAttribute(
-  "aria-pressed", String(dark)
- );
+// 주간/야간 모드: 기존 유지
+const themeBtn=document.getElementById("themeBtn");
+const setDark=dark=>{
+ document.body.classList.toggle("dark",dark);
+ themeBtn.textContent=dark?"☀️ 주간 모드":"🌙 야간 모드";
+ themeBtn.setAttribute("aria-pressed",String(dark));
 };
-
-let isDark = false;
-
-try {
- isDark = localStorage.getItem("munsan-theme") === "dark";
-} catch(e) {}
-
+let isDark=false;
+try{isDark=localStorage.getItem("munsan-theme")==="dark";}catch(e){}
 setDark(isDark);
-
-themeBtn.addEventListener("click", () => {
- isDark = !isDark;
+themeBtn.addEventListener("click",()=>{
+ isDark=!isDark;
  setDark(isDark);
-
- try {
-  localStorage.setItem(
-   "munsan-theme",
-   isDark ? "dark" : "light"
-  );
- } catch(e) {}
+ try{localStorage.setItem("munsan-theme",isDark?"dark":"light");}catch(e){}
 });
 
-// 전체 기자재 검색
-const searchInput =
- document.getElementById("globalSearch");
-
-const resultBox =
- document.getElementById("globalResults");
-
-const rooms = [
- {name:"과학실 1", path:"./science1/"},
- {name:"과학실 2", path:"./science2/"},
- {name:"과학실 3", path:"./science3/"},
- {name:"과학준비실", path:"./prep/"}
+// 모든 과학실의 layout.js와 contents.js를 모두 읽어 실시간 색인 생성
+// contents.js는 Three.js를 요구하므로 위 CDN을 먼저 불러옴.
+// 3D 엔진을 만들지는 않으며, 각 방의 내용만 가져온 뒤 add 함수를 복구함.
+const searchInput=document.getElementById("globalSearch");
+const resultBox=document.getElementById("globalResults");
+const rooms=[
+ {name:"과학실 1",path:"./science1/"},
+ {name:"과학실 2",path:"./science2/"},
+ {name:"과학실 3",path:"./science3/"},
+ {name:"과학준비실",path:"./prep/"}
 ];
 
-const searchable = [];
-const failedRooms = [];
+const searchable=[];
+const failedRooms=[];
+let loading=true;
+const clean=v=>String(v??"").trim();
+const normalized=v=>clean(v).toLocaleLowerCase("ko-KR").replace(/\s+/g,"");
+const originalThreeAdd=window.THREE?.Object3D?.prototype?.add;
+const searchVersion="20261111final";
 
-let loading = true;
-
-const clean = v => String(v ?? "").trim();
-
-const normalized = v =>
- clean(v)
-  .toLocaleLowerCase("ko-KR")
-  .replace(/\s+/g, "");
-
-const originalThreeAdd =
- window.THREE?.Object3D?.prototype?.add;
-
-const searchVersion = "20261111b";
-
-// 스크립트를 순차적으로 읽음
-function scriptLoad(src) {
- return new Promise((resolve, reject) => {
-  const script = document.createElement("script");
-
-  script.src = src +
-   (src.includes("?") ? "&" : "?") +
-   "search_v=" + searchVersion;
-
-  script.async = false;
-
-  script.onload = () => {
-   script.remove();
-   resolve();
-  };
-
-  script.onerror = () => {
-   script.remove();
-   reject(new Error(src + " 불러오기 실패"));
-  };
-
+function scriptLoad(src){
+ return new Promise((resolve,reject)=>{
+  const script=document.createElement("script");
+  script.src=src+(src.includes("?")?"&":"?")+"search_v="+searchVersion;
+  script.async=false;
+  script.onload=()=>{script.remove();resolve();};
+  script.onerror=()=>{script.remove();reject(new Error(src+" 불러오기 실패"));};
   document.head.appendChild(script);
  });
 }
 
-// 검색 항목 등록
-function appendEntry(room, entry, type) {
- if (!entry || typeof entry !== "object") return;
-
- const isItem = type === "item";
-
- const name = clean(
-  entry.name ||
-  entry.label ||
-  entry.title ||
-  entry.id
- );
-
- if (!name) return;
-
- const cabinet = clean(
-  isItem ? entry.cabinet : entry.id
- );
-
- const shelves = Array.isArray(entry.shelves)
-  ? entry.shelves
-  : [entry.shelf];
-
- const shelfText = isItem
-  ? shelves
-     .filter(x =>
-      x !== null &&
-      x !== undefined &&
-      x !== ""
-     )
-     .map(x => String(x) + "단")
-     .join("·")
-  : "";
-
- const extra = clean(
-  entry.description ||
-  entry.location ||
-  entry.verifiedContents ||
-  ""
- );
-
- const unique = [
-  room.path,
-  name,
-  cabinet,
-  shelfText
- ].join("|");
-
- if (searchable.some(x => x.unique === unique)) {
-  return;
- }
-
+function appendEntry(room, entry, type){
+ if(!entry||typeof entry!=="object")return;
+ const isItem=type==="item";
+ const name=clean(entry.name||entry.label||entry.title||entry.id);
+ if(!name)return;
+ const cabinet=clean(isItem?entry.cabinet:entry.id);
+ const shelves=Array.isArray(entry.shelves)?entry.shelves:[entry.shelf];
+ const shelfText=isItem? shelves.filter(x=>x!==null&&x!==undefined&&x!=="").map(x=>String(x)+"단").join("·"):"";
+ const extra=clean(entry.description||entry.location||entry.verifiedContents||"");
+ const unique=[room.path,name,cabinet,shelfText].join("|");
+ if(searchable.some(x=>x.unique===unique))return;
  searchable.push({
-  unique,
-  name,
-  cabinet,
-  shelfText,
-  extra,
-  room: room.name,
-  path: room.path,
-
-  keywords: Array.isArray(entry.keywords)
-   ? entry.keywords.join(" ")
-   : ""
+  unique, name, cabinet, shelfText, extra,
+  room:room.name, path:room.path,
+  keywords:Array.isArray(entry.keywords)?entry.keywords.join(" "):""
  });
 }
 
-// 각 과학실의 layout.js와 contents.js 읽기
-async function readRoom(room) {
- window.MUNSAN_LAB_LAYOUT = undefined;
-
- try {
-  await scriptLoad(room.path + "layout.js");
-
-  let layout = window.MUNSAN_LAB_LAYOUT;
-
-  if (!layout || !Array.isArray(layout.cabinets)) {
-   throw new Error(
-    "layout.js 배치 정보를 읽지 못함"
-   );
+// 과학준비실은 과거 layout.js에서 PREP_LAYOUT 또는 구형 배열을 사용했습니다.
+// 메인 검색에서는 3D를 렌더링하지 않으므로, 준비실 contents.js가
+// 실제 기자재 목록을 등록할 수 있는 최소한의 보관장 메타데이터만 보완합니다.
+function prepSearchLayout() {
+ const ids=[
+  'P-L01','P-L02','P-R01','P-R02','P-R03','P-F01','P-F02'
+ ];
+ const norm=id=>String(id||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+ const excluded=new Set(['PFRIDGE','PWASTE']);
+ const options=[window.MUNSAN_LAB_LAYOUT,window.PREP_LAYOUT,window.LAB_LAYOUT];
+ try{if(typeof PREP_LAYOUT!=='undefined')options.push(PREP_LAYOUT);}catch(e){}
+ const source=options.find(x=>x&&typeof x==='object'&&(
+   Array.isArray(x.cabinets)||Array.isArray(x.cab)||Array.isArray(x.furniture)
+ ))||{};
+ const raw=[
+  ...(Array.isArray(source.cabinets)?source.cabinets:[]),
+  ...(Array.isArray(source.cab)?source.cab:[]),
+  ...(Array.isArray(source.furniture)?source.furniture:[])
+ ];
+ const converted=raw.map((c,i)=>{
+  if(Array.isArray(c)){
+   const full=typeof c[1]==='string'&&typeof c[2]==='string';
+   c=full?{id:c[0],label:c[1],kind:c[2],x:c[3],z:c[4],rot:c[5],width:c[6],height:c[7],depth:c[8],shelves:c[9]}:
+    {id:c[0],kind:c[1],x:c[2],z:c[3],rot:c[4],width:c[5],height:c[6],depth:c[7],shelves:c[8]};
   }
+  return {...c,id:String(c.id||'P-UNKNOWN-'+i),shelves:Math.max(1,Number(c.shelves||c.rows||3))};
+ }).filter(c=>!excluded.has(norm(c.id)));
+ const have=new Set(converted.map(c=>norm(c.id)));
+ for(const id of ids){
+  if(!have.has(norm(id))){
+   // 3D 모델용 좌표가 아니라 검색 메타데이터만 만듭니다.
+   converted.push({id,label:id,kind:'wood',shelves:3});
+  }
+ }
+ const oldInventory=Array.isArray(source.inventory)?source.inventory:[];
+ window.MUNSAN_LAB_LAYOUT={
+  id:'prep',name:'과학준비실',
+  room:{width:4.8,depth:9.4,height:3.2},
+  cabinets:converted,furniture:[],
+  inventory:oldInventory.filter(x=>!excluded.has(norm(x.cabinet)))
+ };
+}
 
-  // 오늘 등록한 기자재도 함께 로드
-  if (window.THREE && originalThreeAdd) {
-   try {
-    await scriptLoad(
-     room.path + "contents.js"
-    );
-   } catch(error) {
-    failedRooms.push(
-     room.name + " 추가 기자재"
-    );
-
-    console.warn(
-     "[메인 검색]", room.name, error
-    );
+async function readRoom(room){
+ window.MUNSAN_LAB_LAYOUT=undefined;
+ try{
+  if(room.path==='./prep/'){
+   // 준비실 layout.js가 없거나 구형 형식이어도 contents.js를 읽습니다.
+   try{
+    await scriptLoad(room.path+'layout.js');
+   }catch(err){
+    console.info('[메인 검색] 준비실 배치 파일 없음: 기자재 검색 메타데이터로 진행');
    }
-  } else {
-   failedRooms.push(
-    "3D 라이브러리(추가 기자재)"
-   );
+   prepSearchLayout();
+  }else{
+   // 기존 과학실 1·2·3 로딩 방식은 바꾸지 않습니다.
+   await scriptLoad(room.path+'layout.js');
+   const layout=window.MUNSAN_LAB_LAYOUT;
+   if(!layout||!Array.isArray(layout.cabinets)){
+    throw new Error('layout.js 배치 정보를 읽지 못함');
+   }
   }
 
-  layout = window.MUNSAN_LAB_LAYOUT || layout;
-
-  // 보관장
-  for (const c of layout.cabinets || []) {
-   appendEntry(room, c, "cabinet");
+  let layout=window.MUNSAN_LAB_LAYOUT;
+  if(window.THREE&&originalThreeAdd){
+   try{
+    await scriptLoad(room.path+'contents.js');
+   }catch(error){
+    failedRooms.push(room.name+' 추가 기자재');
+    console.warn('[메인 검색]',room.name,error);
+   }
+  }else{
+   failedRooms.push('3D 라이브러리(추가 기자재)');
   }
 
-  // 기타 가구
-  for (const c of layout.furniture || []) {
-   appendEntry(room, c, "cabinet");
-  }
-
-  // 기자재
-  for (const item of layout.inventory || []) {
-   appendEntry(room, item, "item");
-  }
-
- } catch(error) {
+  layout=window.MUNSAN_LAB_LAYOUT||layout;
+  for(const c of layout.cabinets||[])appendEntry(room,c,'cabinet');
+  for(const c of layout.furniture||[])appendEntry(room,c,'cabinet');
+  for(const item of layout.inventory||[])appendEntry(room,item,'item');
+ }catch(error){
   failedRooms.push(room.name);
-
-  console.error(
-   "[메인 검색]", room.name, error
-  );
-
- } finally {
-  // contents.js가 설치한 연결 함수를 복구
-  if (
-   originalThreeAdd &&
-   window.THREE?.Object3D
-  ) {
-   window.THREE.Object3D.prototype.add =
-    originalThreeAdd;
+  console.error('[메인 검색]',room.name,error);
+ }finally{
+  if(originalThreeAdd&&window.THREE?.Object3D){
+   window.THREE.Object3D.prototype.add=originalThreeAdd;
   }
  }
 }
 
-// 네 공간을 차례대로 색인
-(async () => {
- for (const room of rooms) {
+(async()=>{
+ for(const room of rooms){
   await readRoom(room);
  }
-
- loading = false;
+ loading=false;
  renderSearch();
 })();
 
-function showResults() {
- resultBox.hidden = false;
-
- searchInput.setAttribute(
-  "aria-expanded", "true"
- );
+function showResults(){
+ resultBox.hidden=false;
+ searchInput.setAttribute("aria-expanded","true");
 }
-
-function hideResults() {
- resultBox.hidden = true;
-
- searchInput.setAttribute(
-  "aria-expanded", "false"
- );
+function hideResults(){
+ resultBox.hidden=true;
+ searchInput.setAttribute("aria-expanded","false");
 }
-
-function renderSearch() {
- const q = normalized(searchInput.value);
-
+function renderSearch(){
+ const q=normalized(searchInput.value);
  resultBox.replaceChildren();
-
- if (!q) {
-  hideResults();
-  return;
- }
-
+ if(!q){hideResults();return;}
  showResults();
-
- if (loading) {
-  const p = document.createElement("div");
-
-  p.className = "result-status";
-  p.textContent =
-   "오늘 등록한 기자재까지 전체 검색 정보를 불러오는 중...";
-
-  resultBox.append(p);
-  return;
+ if(loading){
+  const p=document.createElement("div");
+  p.className="result-status";
+  p.textContent="오늘 등록한 기자재까지 전체 검색 정보를 불러오는 중...";
+  resultBox.append(p);return;
  }
-
- const matches = searchable.filter(item =>
+ const matches=searchable.filter(item=>
   normalized([
-   item.name,
-   item.cabinet,
-   item.room,
-   item.shelfText,
-   item.extra,
-   item.keywords
+   item.name,item.cabinet,item.room,item.shelfText,item.extra,item.keywords
   ].join(" ")).includes(q)
- ).slice(0, 50);
-
- if (!matches.length) {
-  const p = document.createElement("div");
-
-  p.className = "result-status";
-  p.textContent =
-   "검색 결과가 없습니다. 기자재 이름이나 보관장 관리번호로 검색해 보세요.";
-
+ ).slice(0,50);
+ if(!matches.length){
+  const p=document.createElement("div");
+  p.className="result-status";
+  p.textContent="검색 결과가 없습니다. 기자재 이름이나 보관장 관리번호로 검색해 보세요.";
   resultBox.append(p);
  }
-
- for (const item of matches) {
-  const a = document.createElement("a");
-
-  a.className = "result-item";
-
-  a.href = item.path +
-   "index.html?search=" +
+ for(const item of matches){
+  const a=document.createElement("a");
+  a.className="result-item";
+  // 검색어를 전달 (해당 방의 검색 기능은 그대로 유지)
+  a.href=item.path+"index.html?search="+
    encodeURIComponent(item.name);
-
-  const title = document.createElement("strong");
-  title.textContent = item.name;
-
-  const subtitle = document.createElement("small");
-
-  subtitle.textContent = [
-   item.room,
-   item.cabinet,
-   item.shelfText
-  ].filter(Boolean).join(" · ");
-
-  a.append(title, subtitle);
+  const title=document.createElement("strong");
+  title.textContent=item.name;
+  const subtitle=document.createElement("small");
+  subtitle.textContent=[item.room,item.cabinet,item.shelfText]
+   .filter(Boolean).join(" · ");
+  a.append(title,subtitle);
   resultBox.append(a);
  }
-
- if (failedRooms.length) {
-  const p = document.createElement("div");
-
-  p.className = "result-status";
-
-  p.textContent =
-   "일부 데이터를 불러오지 못했습니다: " +
+ if(failedRooms.length){
+  const p=document.createElement("div");
+  p.className="result-status";
+  p.textContent="일부 데이터를 불러오지 못했습니다: "+
    [...new Set(failedRooms)].join(", ");
-
   resultBox.append(p);
  }
 }
-
-searchInput.addEventListener(
- "input", renderSearch
-);
-
-searchInput.addEventListener(
- "focus", renderSearch
-);
-
-document.addEventListener("pointerdown", e => {
- if (!e.target.closest(".search-wrap")) {
-  hideResults();
- }
+searchInput.addEventListener("input",renderSearch);
+searchInput.addEventListener("focus",renderSearch);
+document.addEventListener("pointerdown",e=>{
+ if(!e.target.closest(".search-wrap"))hideResults();
 });
-
-searchInput.addEventListener("keydown", e => {
- if (e.key === "Escape") {
-  hideResults();
- }
-
- if (e.key === "Enter") {
-  const first = resultBox.querySelector("a");
-
-  if (first) {
-   window.location.href = first.href;
-  }
+searchInput.addEventListener("keydown",e=>{
+ if(e.key==="Escape")hideResults();
+ if(e.key==="Enter"){
+  const first=resultBox.querySelector("a");
+  if(first)window.location.href=first.href;
  }
 });
 </script>
-
 </body>
 </html>
