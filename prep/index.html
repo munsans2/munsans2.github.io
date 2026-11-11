@@ -2,667 +2,186 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>문산중학교 | 과학준비실</title>
+ <meta charset="UTF-8">
 
-<style>
-*{box-sizing:border-box}
-body{
- margin:0;
- overflow:hidden;
- font-family:"Malgun Gothic",Arial,sans-serif;
- background:#eaf2fa;
- color:#2b4057;
-}
-canvas{display:block}
-header{
- position:fixed;
- top:15px;left:15px;right:15px;
- z-index:20;
- display:flex;gap:9px;flex-wrap:wrap;
- pointer-events:none;
-}
-header>*{pointer-events:auto}
-.glass{
- background:rgba(255,255,255,.93);
- border:1px solid #d8e5f0;
- border-radius:20px;
- padding:10px 14px;
- box-shadow:0 8px 25px #56718b22;
- backdrop-filter:blur(18px);
-}
-a,button{
- font:inherit;
- cursor:pointer;
-}
-header a,header button{
- display:inline-block;
- border:0;
- border-radius:12px;
- padding:8px 11px;
- background:#edf3f9;
- color:#34516e;
- text-decoration:none;
- font-size:12px;
-}
-header .active{
- background:#2878e8;
- color:white;
-}
-aside{
- position:fixed;
- z-index:20;
- right:16px;
- top:110px;
- bottom:16px;
- width:290px;
- overflow:auto;
- background:rgba(255,255,255,.94);
- border:1px solid #d9e5f0;
- border-radius:22px;
- padding:19px;
- box-shadow:0 12px 35px #56718b22;
- backdrop-filter:blur(18px);
-}
-aside h2{margin:0 0 8px}
-.muted{
- color:#6e8296;
- font-size:13px;
- line-height:1.6;
-}
-#search{
- width:100%;
- padding:12px;
- border:1px solid #cbdbe9;
- border-radius:12px;
- background:white;
- margin:10px 0;
-}
-.item{
- display:block;
- width:100%;
- text-align:left;
- padding:10px;
- margin:6px 0;
- border:0;
- border-radius:10px;
- background:#edf3f9;
- color:#34516e;
-}
-.item:hover{background:#dbeafb}
-#detail{
- border-top:1px solid #dce6ef;
- padding-top:13px;
- margin-top:15px;
-}
-#detail[hidden]{display:none}
-.bottom{
- position:fixed;
- z-index:20;
- left:16px;
- bottom:16px;
- display:flex;gap:8px;
-}
-.bottom button{
- padding:11px 14px;
- background:#ffffffeb;
- border:1px solid #d9e5f0;
- border-radius:12px;
-}
-body.dark aside,
-body.dark .glass{
- background:rgba(29,42,59,.94);
- color:#eaf2fa;
-}
-@media(max-width:700px){
- header{top:7px;left:7px;right:7px;gap:5px}
- .glass{padding:7px}
- header a,header button{padding:6px}
- aside{
-  top:auto;
-  right:8px;
-  bottom:8px;
-  width:min(270px,74vw);
-  max-height:45vh;
-  padding:12px;
+ <meta name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+ <meta name="theme-color" content="#eaf2fa">
+
+ <title>
+  과학준비실 · 문산중학교 3D 기자재 안내
+ </title>
+
+ <link rel="stylesheet" href="../common/style.css">
+
+ <style>
+ #searchPanel {
+  position: fixed !important;
+  left: auto !important;
+  right: 18px !important;
+  top: 74px;
+  z-index: 100;
+  width: 225px;
+  max-height: calc(100vh - 155px);
+  overflow-y: auto;
  }
- .bottom{bottom:8px;left:8px}
-}
-</style>
+
+ #detail:not([hidden]) {
+  position: fixed;
+  left: 18px;
+  right: auto;
+  z-index: 110;
+ }
+
+ @media(max-width:700px) {
+  #searchPanel {
+   left: auto !important;
+   right: 8px !important;
+   top: 65px;
+   width: min(225px,70vw);
+   max-height: 43vh;
+  }
+
+  #detail:not([hidden]) {
+   left: 8px;
+   right: auto;
+   max-width: 75vw;
+  }
+ }
+ </style>
 </head>
 
 <body>
 
-<header>
- <div class="glass">
-  <strong>⚗️ 문산중학교 과학준비실</strong>
-  <a href="../index.html">메인</a>
- </div>
- <nav class="glass">
-  <a href="../science1/index.html">과학실 1</a>
-  <a href="../science2/index.html">과학실 2</a>
-  <a href="../science3/index.html">과학실 3</a>
-  <button class="active">준비실</button>
- </nav>
- <div class="glass">
-  <button data-view="all">전체보기</button>
-  <button data-view="left">왼쪽</button>
-  <button data-view="back">안쪽</button>
-  <button data-view="right">오른쪽</button>
-  <button data-view="top">위에서</button>
- </div>
-</header>
+ <header class="topbar">
 
-<aside>
- <h2>과학준비실</h2>
- <p class="muted">
-  보관장을 클릭하면 위치와 관리번호를 확인할 수 있습니다.
-  마우스 드래그로 회전하고 휠로 확대할 수 있습니다.
- </p>
- <input id="search" placeholder="보관장 · 냉장고 · 시약 검색">
- <div id="results"></div>
- <section id="detail" hidden>
-  <button class="item" id="detailClose">닫기</button>
-  <h3 id="detailTitle"></h3>
-  <p id="detailMeta" class="muted"></p>
-  <button class="item" id="doorToggle">문 열기 / 닫기</button>
+  <a class="round glass" href="../index.html">
+   ← 메인
+  </a>
+
+  <div class="brand glass">
+   <strong>🗄️ 과학준비실</strong>
+   <span>문산중학교 · 3D 공간 안내</span>
+   <em>visionOS</em>
+  </div>
+
+  <button
+   id="theme"
+   class="round glass"
+   aria-label="주간 야간 전환">
+   🌙 야간 모드
+  </button>
+
+ </header>
+
+ <section
+  id="searchPanel"
+  class="glass"
+  aria-label="보관장 검색">
+
+  <h2>과학준비실 기자재 찾기</h2>
+
+  <p>
+   뷰렛·전압계·실험복·실험키트 검색
+  </p>
+
+  <input
+   id="search"
+   type="search"
+   placeholder="기자재 또는 보관장 번호"
+   autocomplete="off"
+   aria-label="검색어 입력">
+
+  <div
+   id="results"
+   aria-live="polite">
+  </div>
+
+  <small>
+   선반 미확인 물품은 위쪽부터 임시 배치
+   · 관리번호는 시스템용
+  </small>
+
  </section>
-</aside>
-
-<div class="bottom">
- <button id="reset">초기화</button>
- <button id="fullscreen">전체화면</button>
- <button id="theme">🌙 야간 모드</button>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script src="./layout.js"></script>
-
-<script>
-(()=>{
-"use strict";
-
-const T=THREE;
-const config=window.PREP_LAYOUT;
-
-if(!config){
- alert("prep/layout.js 파일을 찾을 수 없습니다.");
- return;
-}
-
-const W=config.room.width;
-const D=config.room.depth;
-const H=config.room.height;
-
-const scene=new T.Scene();
-scene.background=new T.Color("#eaf2fa");
-
-const camera=new T.PerspectiveCamera(
- 45,innerWidth/innerHeight,.1,100
-);
-camera.position.set(10,10,13);
-
-const renderer=new T.WebGLRenderer({antialias:true});
-renderer.setSize(innerWidth,innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.outputEncoding=T.sRGBEncoding;
-document.body.insertBefore(
- renderer.domElement,
- document.body.firstChild
-);
-
-const orbit=new T.OrbitControls(camera,renderer.domElement);
-orbit.enableDamping=true;
-orbit.target.set(0,1,0);
-orbit.minDistance=2;
-orbit.maxDistance=30;
-orbit.maxPolarAngle=Math.PI/2-.02;
-
-scene.add(new T.HemisphereLight(
- 0xffffff,0xb5c4d0,1.35
-));
-const sun=new T.DirectionalLight(0xffffff,.75);
-sun.position.set(-4,10,8);
-scene.add(sun);
-
-const material=color=>
- new T.MeshLambertMaterial({color});
-
-const M={
- wall:material("#f4f6f8"),
- floor:material("#e4e9ed"),
- cream:material("#e7e9d6"),
- frame:material("#c4cbb5"),
- metal:material("#aab9c5"),
- dark:material("#34485b"),
- wood:material("#b48b61"),
- yellow:material("#e6c52d"),
- red:material("#d15b55"),
- blue:material("#5188ba"),
- glass:new T.MeshBasicMaterial({
-  color:"#b6deeb",
-  transparent:true,
-  opacity:.32,
-  depthWrite:false,
-  side:T.DoubleSide
- })
-};
-
-const root=new T.Group();
-scene.add(root);
-
-const objects=[];
-const pickables=[];
-let selected=null;
-
-function cube(parent,w,h,d,x,y,z,mat,id){
- const mesh=new T.Mesh(
-  new T.BoxGeometry(w,h,d),mat
- );
- mesh.position.set(x,y,z);
- parent.add(mesh);
- if(id){
-  mesh.userData.owner=id;
-  pickables.push(mesh);
- }
- return mesh;
-}
-
-function label(parent,text,x,y,z,width=1.25){
- const canvas=document.createElement("canvas");
- canvas.width=512;
- canvas.height=100;
- const ctx=canvas.getContext("2d");
-
- ctx.fillStyle="#fffffff2";
- ctx.fillRect(0,0,512,100);
- ctx.strokeStyle="#c4d4e3";
- ctx.lineWidth=5;
- ctx.strokeRect(3,3,506,94);
-
- ctx.fillStyle="#304c65";
- ctx.font="bold 34px sans-serif";
- ctx.textAlign="center";
- ctx.textBaseline="middle";
- ctx.fillText(text,256,50,480);
-
- const sprite=new T.Sprite(
-  new T.SpriteMaterial({
-   map:new T.CanvasTexture(canvas),
-   depthTest:false
-  })
- );
- sprite.position.set(x,y,z);
- sprite.scale.set(width,.25,1);
- parent.add(sprite);
-}
-
-// 바닥
-cube(root,W,.12,D,0,-.08,0,M.floor);
-const grid=new T.GridHelper(D,24,0xcbd6df,0xcbd6df);
-grid.scale.x=W/D;
-grid.position.y=.005;
-root.add(grid);
-
-// 안쪽 벽
-cube(root,W,H,.08,0,H/2,-D/2,M.wall);
-
-// 왼쪽 벽
-cube(root,.08,H,D,-W/2,H/2,0,M.wall);
-
-// 오른쪽 벽
-cube(root,.08,H,D,W/2,H/2,0,M.wall);
-
-// 출입문 벽
-const door=config.door;
-const start=door.x-door.width/2;
-const end=door.x+door.width/2;
-
-cube(root,start+W/2,2.5,.08,
- (-W/2+start)/2,1.25,D/2,M.wall);
-
-cube(root,W/2-end,2.5,.08,
- (end+W/2)/2,1.25,D/2,M.wall);
-
-cube(root,door.width,H-2.5,.08,
- door.x,2.5+(H-2.5)/2,D/2,M.wall);
-
-// 출입문
-const entrance=new T.Group();
-entrance.position.set(door.x,0,D/2-.06);
-root.add(entrance);
-
-cube(entrance,door.width-.06,2.4,.05,
- 0,1.2,0,M.wood);
-cube(entrance,.65,.72,.055,
- 0,1.62,-.035,M.glass);
-cube(entrance,.08,.05,.10,
- door.width*.33,1.08,-.06,M.metal);
-label(entrance,"출입문",0,2.75,0,1.0);
-
-// 창문: 안쪽 벽
-const win=config.window;
-cube(root,win.width,win.height,.035,
- win.x,2.02,-D/2+.065,M.glass);
-
-for(const x of [
- win.x-win.width/2,
- win.x,
- win.x+win.width/2
-]){
- cube(root,.045,win.height,.07,
- x,2.02,-D/2+.09,M.metal);
-}
-
-for(const y of [1.4,2.65]){
- cube(root,win.width,.045,.07,
- win.x,y,-D/2+.09,M.metal);
-}
-
-// 보관장
-function makeCab(c){
- const g=new T.Group();
- g.position.set(c.x,0,c.z);
- g.rotation.y=c.rot*Math.PI/180;
- root.add(g);
-
- const w=c.width;
- const h=c.height;
- const d=c.depth;
-
- const base=
-  c.kind==="wood"?M.wood:
-  c.kind==="fridge"?M.metal:
-  c.kind==="waste"?M.yellow:
-  c.kind==="chemical"?M.metal:M.cream;
-
- cube(g,w,.055,d,0,.03,0,base,c.id);
- cube(g,w,.055,d,0,h-.03,0,base,c.id);
- cube(g,.045,h,d,-w/2,h/2,0,base,c.id);
- cube(g,.045,h,d,w/2,h/2,0,base,c.id);
- cube(g,w,h,.04,0,h/2,-d/2,base,c.id);
-
- const moving=[];
-
- if(c.kind==="large"){
-  // 상단 유리문 + 하단 컬러 트레이
-  const split=h*.47;
-
-  cube(g,w,.06,d,0,split,0,base,c.id);
-
-  for(let col=0;col<2;col++){
-   const cx=(col-.5)*w/2;
-
-   const glassDoor=new T.Group();
-   glassDoor.position.set(cx,0,d/2);
-   g.add(glassDoor);
-
-   cube(glassDoor,w/2-.045,h-split-.09,.025,
-    0,(h+split)/2,0,M.glass,c.id);
-
-   moving.push({
-    part:glassDoor,
-    mode:"slide",
-    origin:cx,
-    direction:col===0?1:-1
-   });
-
-   for(let row=0;row<4;row++){
-    const colors=[
-     M.red,M.blue,M.yellow,M.blue
-    ];
-    cube(g,w/2-.12,.12,d*.72,
-     cx,.19+row*.23,0,
-     colors[(row+col)%colors.length],
-     c.id);
-   }
-  }
-
- }else if(c.kind==="chemical"){
-  // 시약보관함: 불투명 금속문
-  for(let col=0;col<2;col++){
-   const cx=(col-.5)*w/2;
-   const p=new T.Group();
-   p.position.set(cx,0,d/2);
-   g.add(p);
-
-   cube(p,w/2-.035,h-.09,.035,
-    0,h/2,0,M.metal,c.id);
-   cube(p,.025,.18,.05,
-    col===0?w*.16:-w*.16,
-    h*.53,.035,M.dark,c.id);
-
-   moving.push({
-    part:p,mode:"slide",
-    origin:cx,
-    direction:col===0?1:-1
-   });
-  }
-
- }else if(c.kind==="fridge"){
-  // 상하 2문 냉장고
-  const upper=h*.43;
-
-  for(const item of [
-   {y:h-upper/2,height:upper-.035},
-   {y:(h-upper)/2,height:h-upper-.035}
-  ]){
-   const p=new T.Group();
-   p.position.set(0,0,d/2);
-   g.add(p);
-
-   cube(p,w-.04,item.height,.035,
-    0,item.y,0,M.metal,c.id);
-   cube(p,.035,.22,.06,
-    w*.34,item.y,.04,M.dark,c.id);
-
-   moving.push({
-    part:p,mode:"fridge"
-   });
-  }
-
- }else if(c.kind==="waste"){
-  cube(g,w-.07,h-.10,.045,
-   0,h/2,d/2,M.yellow,c.id);
-
-  cube(g,w*.75,.13,.05,
-   0,h*.70,d/2+.04,M.dark,c.id);
-
- }else if(c.kind==="wood"){
-  // 미니 목재 서랍장
-  for(let row=0;row<2;row++){
-   const p=new T.Group();
-   p.position.set(
-    0,(row+.5)*h/2,d/2
-   );
-   g.add(p);
-
-   cube(p,w-.07,h/2-.035,.04,
-    0,0,0,M.wood,c.id);
-
-   cube(p,.16,.025,.055,
-    0,0,.04,M.dark,c.id);
-
-   moving.push({
-    part:p,mode:"drawer",
-    origin:d/2
-   });
-  }
- }
-
- label(g,c.name,0,h+.22,0,
-  Math.max(1.1,Math.min(2.1,w*1.4)));
-
- objects.push({
-  ...c,g,moving,open:0,target:0
- });
-}
-
-config.cabinets.forEach(makeCab);
-
-// 검색과 선택
-const $=id=>document.getElementById(id);
-
-function select(c){
- selected=c;
- $("detail").hidden=false;
- $("detailTitle").textContent=c.name;
- $("detailMeta").textContent=
-  "관리번호: "+c.id+
-  " / 높이: "+c.height+"m";
-
- orbit.target.set(c.x,c.height*.5,c.z);
- camera.position.set(c.x+2.5,2.9,c.z+3.4);
- orbit.update();
-}
-
-function search(){
- const q=$("search").value.trim().toLowerCase();
- $("results").replaceChildren();
-
- for(const c of objects.filter(o=>
-  (o.name+" "+o.id).toLowerCase().includes(q)
- )){
-  const b=document.createElement("button");
-  b.className="item";
-  b.textContent=c.name;
-  b.onclick=()=>select(c);
-  $("results").append(b);
- }
-}
-
-$("search").addEventListener("input",search);
-
-$("detailClose").onclick=()=>{
- $("detail").hidden=true;
- selected=null;
-};
-
-$("doorToggle").onclick=()=>{
- if(selected){
-  selected.target=selected.target?0:1;
- }
-};
-
-// 3D 클릭
-const ray=new T.Raycaster();
-const mouse=new T.Vector2();
-let pointerDown=null;
-
-renderer.domElement.addEventListener(
- "pointerdown",e=>{
-  pointerDown=[e.clientX,e.clientY];
- }
-);
-
-renderer.domElement.addEventListener(
- "pointerup",e=>{
-  if(!pointerDown)return;
-
-  const distance=Math.hypot(
-   e.clientX-pointerDown[0],
-   e.clientY-pointerDown[1]
-  );
-  pointerDown=null;
-  if(distance>6)return;
-
-  mouse.set(
-   e.clientX/innerWidth*2-1,
-   -e.clientY/innerHeight*2+1
-  );
-
-  ray.setFromCamera(mouse,camera);
-  const hit=ray.intersectObjects(
-   pickables,false
-  )[0];
-
-  if(!hit)return;
-
-  const obj=objects.find(
-   o=>o.id===hit.object.userData.owner
-  );
-
-  if(obj)select(obj);
- }
-);
-
-// 시점 변경
-function setView(name){
- const positions={
-  all:[10,10,13],
-  left:[-10,6,2],
-  back:[0,7,-12],
-  right:[10,6,2],
-  top:[.01,16,.01]
- };
- camera.position.set(...positions[name]);
- orbit.target.set(0,1,0);
- orbit.update();
-}
-
-document.querySelectorAll("[data-view]").forEach(
- b=>b.onclick=()=>setView(b.dataset.view)
-);
-
-$("reset").onclick=()=>setView("all");
-
-$("fullscreen").onclick=()=>{
- if(document.fullscreenElement){
-  document.exitFullscreen();
- }else{
-  document.documentElement.requestFullscreen();
- }
-};
-
-$("theme").onclick=()=>{
- const dark=document.body.classList.toggle("dark");
- scene.background.set(dark?"#172333":"#eaf2fa");
- $("theme").textContent=
-  dark?"☀ 주간 모드":"🌙 야간 모드";
-};
-
-addEventListener("resize",()=>{
- camera.aspect=innerWidth/innerHeight;
- camera.updateProjectionMatrix();
- renderer.setSize(innerWidth,innerHeight);
-});
-
-// 문·서랍 애니메이션
-const clock=new T.Clock();
-
-function frame(){
- requestAnimationFrame(frame);
-
- const dt=Math.min(.05,clock.getDelta());
-
- for(const c of objects){
-  c.open+=(c.target-c.open)*Math.min(1,dt*7);
-
-  for(const item of c.moving){
-   if(item.mode==="slide"){
-    item.part.position.x=
-     item.origin+
-     item.direction*c.width*.35*c.open;
-   }else if(item.mode==="drawer"){
-    item.part.position.z=
-     item.origin+.30*c.open;
-   }else if(item.mode==="fridge"){
-    item.part.rotation.y=
-     -1.1*c.open;
-   }
-  }
- }
-
- orbit.update();
- renderer.render(scene,camera);
-}
-
-search();
-frame();
-
-})();
-</script>
+
+ <section
+  id="detail"
+  class="glass"
+  hidden
+  aria-label="선택한 보관장">
+
+  <div class="detail-heading">
+   <h2 id="detailTitle"></h2>
+
+   <button
+    id="detailClose"
+    aria-label="닫기">
+    ✕
+   </button>
+  </div>
+
+  <div id="detailMeta"></div>
+  <div id="shelfList"></div>
+
+  <button
+   id="doorToggle"
+   class="primary">
+   보관장 문 열기
+  </button>
+
+ </section>
+
+ <div id="hint">
+  마우스로 회전 · 휠 확대 · 보관장 클릭하여 문 열기
+ </div>
+
+ <nav id="controls" class="glass">
+
+  <button data-view="overview" class="active">
+   🏫 전체
+  </button>
+
+  <button data-view="left">
+   🗄 왼쪽
+  </button>
+
+  <button data-view="back">
+   🔬 뒤쪽
+  </button>
+
+  <button data-view="window">
+   🪟 오른쪽
+  </button>
+
+  <button data-view="top">
+   ⬚ 평면
+  </button>
+
+  <button id="reset">
+   ↻ 초기화
+  </button>
+
+  <button id="fullscreen">
+   ⛶ 전체화면
+  </button>
+
+ </nav>
+
+ <div id="notice" role="status"></div>
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+ <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+ <!-- 기존 과학준비실 배치 -->
+ <script src="./layout.js"></script>
+
+ <!-- 준비실 기자재 및 3D 모형 -->
+ <script src="./contents.js?v=1"></script>
+
+ <!-- 기존 공통 엔진 -->
+ <script src="../common/scene.js"></script>
+
 </body>
 </html>
