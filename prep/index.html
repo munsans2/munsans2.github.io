@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,165 +5,206 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#eaf2fa">
 <title>과학준비실 · 문산중학교 3D 기자재 안내</title>
-
 <link rel="stylesheet" href="../common/style.css">
-
 <style>
-#searchPanel{
- position:fixed!important;
- left:auto!important;
- right:18px!important;
- top:74px;
- z-index:100;
- width:225px;
- max-height:calc(100vh - 155px);
- overflow-y:auto;
-}
-
-#detail:not([hidden]){
- position:fixed;
- left:18px;
- right:auto;
- z-index:110;
-}
-
-@media(max-width:700px){
- #searchPanel{
-  left:auto!important;
-  right:8px!important;
-  top:65px;
-  width:min(225px,70vw);
-  max-height:43vh;
- }
- #detail:not([hidden]){
-  left:8px;
-  right:auto;
-  max-width:75vw;
- }
-}
+#searchPanel {position:fixed!important;left:auto!important;right:18px!important;top:74px;z-index:100;width:225px;max-height:calc(100vh - 155px);overflow-y:auto}
+#detail:not([hidden]) {position:fixed;left:18px;right:auto;z-index:110}
+#prepStatus {position:fixed;z-index:120;left:50%;top:90px;transform:translateX(-50%);max-width:min(560px,94vw);background:#fff9e9;border:1px solid #dbc89d;border-radius:13px;color:#553e18;padding:10px 15px;font-size:12px;line-height:1.6;box-shadow:0 8px 22px #26394a20;display:none}
+@media(max-width:700px){#searchPanel{right:8px!important;top:65px;width:min(225px,70vw);max-height:43vh}#detail:not([hidden]){left:8px;right:auto;max-width:75vw}#prepStatus{top:55px}}
 </style>
 </head>
-
 <body>
-
 <header class="topbar">
- <a class="round glass" href="../index.html">
-  ← 메인
- </a>
-
- <div class="brand glass">
-  <strong>🗄️ 과학준비실</strong>
-  <span>문산중학교 · 3D 공간 안내</span>
-  <em>visionOS</em>
- </div>
-
- <button id="theme" class="round glass"
-  aria-label="주간 야간 전환">
-  🌙 야간 모드
- </button>
+  <a class="round glass" href="../index.html">← 메인</a>
+  <div class="brand glass"><strong>🗄️ 과학준비실</strong><span>문산중학교 · 3D 공간 안내</span><em>visionOS</em></div>
+  <button id="theme" class="round glass" aria-label="주간 야간 전환">🌙 야간 모드</button>
 </header>
-
-<section id="searchPanel" class="glass"
- aria-label="보관장 검색">
-
- <h2>과학준비실 기자재 찾기</h2>
- <p>뷰렛·전압계·실험복·실험키트 검색</p>
-
- <input id="search" type="search"
-  placeholder="기자재 또는 보관장 번호"
-  autocomplete="off" aria-label="검색어 입력">
-
- <div id="results" aria-live="polite"></div>
-
- <small>
-  선반 미확인 물품은 임시 배치 · 번호는 시스템 관리용
- </small>
+<section id="searchPanel" class="glass" aria-label="보관장 검색">
+  <h2>과학준비실 기자재 찾기</h2>
+  <p>뷰렛·전압계·실험복·실험키트 검색</p>
+  <input id="search" type="search" placeholder="기자재 또는 보관장 번호" autocomplete="off" aria-label="검색어 입력">
+  <div id="results" aria-live="polite"></div>
+  <small>선반 미확인 물품은 임시 배치 · 번호는 시스템 관리용</small>
 </section>
-
-<section id="detail" class="glass" hidden
- aria-label="선택한 보관장">
-
- <div class="detail-heading">
-  <h2 id="detailTitle"></h2>
-  <button id="detailClose" aria-label="닫기">✕</button>
- </div>
-
- <div id="detailMeta"></div>
- <div id="shelfList"></div>
-
- <button id="doorToggle" class="primary">
-  보관장 문 열기
- </button>
+<section id="detail" class="glass" hidden aria-label="선택한 보관장">
+  <div class="detail-heading"><h2 id="detailTitle"></h2><button id="detailClose" aria-label="닫기">✕</button></div>
+  <div id="detailMeta"></div><div id="shelfList"></div>
+  <button id="doorToggle" class="primary">보관장 문 열기</button>
 </section>
-
-<div id="hint">
- 마우스로 회전 · 휠 확대 · 보관장 클릭하여 문 열기
-</div>
-
+<div id="hint">마우스로 회전 · 휠 확대 · 보관장 클릭하여 문 열기</div>
 <nav id="controls" class="glass">
- <button data-view="overview" class="active">🏫 전체</button>
- <button data-view="left">🗄 왼쪽</button>
- <button data-view="back">🔬 뒤쪽</button>
- <button data-view="window">🪟 오른쪽</button>
- <button data-view="top">⬚ 평면</button>
- <button id="reset">↻ 초기화</button>
- <button id="fullscreen">⛶ 전체화면</button>
+  <button data-view="overview" class="active">🏫 전체</button>
+  <button data-view="left">🗄 왼쪽</button>
+  <button data-view="back">🔬 뒤쪽</button>
+  <button data-view="window">🪟 오른쪽</button>
+  <button data-view="top">⬚ 평면</button>
+  <button id="reset">↻ 초기화</button>
+  <button id="fullscreen">⛶ 전체화면</button>
 </nav>
-
 <div id="notice" role="status"></div>
+<div id="prepStatus" role="status"></div>
 
 <script>
-window.MUNSAN_PREP_LOAD_ERRORS=[];
-
+window.MUNSAN_PREP_ERRORS=[];
 window.addEventListener('error',function(e){
- if(e.filename && /contents|layout|scene/.test(e.filename)){
-  window.MUNSAN_PREP_LOAD_ERRORS.push(e.message);
- }
+  if(e.filename && /layout|contents|scene/i.test(e.filename)) {
+    window.MUNSAN_PREP_ERRORS.push(e.message || 'JavaScript 로딩 오류');
+  }
 });
 </script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="./layout.js?v=20261111d" onerror="window.MUNSAN_PREP_ERRORS.push('prep/layout.js 파일을 찾지 못함')"></script>
 
-<script src="./layout.js"></script>
-<script src="./contents.js?v=20261111c"></script>
-
+<!-- 이 파일 안에서 원래 준비실 배치 형식을 공통 3D 엔진에 연결합니다. -->
 <script>
-try{
- const q=new URLSearchParams(location.search).get('search');
- if(q){
-  document.getElementById('search').value=q;
- }
-}catch(e){}
+(() => {
+  'use strict';
+  const result = window.MUNSAN_PREP_LAYOUT_CHECK = {mode:'',notes:[],count:0};
+  const nonempty = v => v !== undefined && v !== null && v !== '';
+  const num = (v, fallback) => nonempty(v) && Number.isFinite(Number(v)) ? Number(v) : fallback;
+  const arrayOf = v => Array.isArray(v) ? v : [];
+  const knownKeys = ['MUNSAN_LAB_LAYOUT','PREP_LAYOUT','LAB_LAYOUT','LAB_CONFIG','SCIENCE_LAYOUT'];
+  const sources = knownKeys.map(k => ({key:k, value:window[k]}));
+  // 기존 스크립트가 const PREP_LAYOUT으로 선언한 경우도 대응
+  try { if(typeof PREP_LAYOUT !== 'undefined') sources.push({key:'PREP_LAYOUT const',value:PREP_LAYOUT}); } catch(e) {}
+  const looksLikePrep = obj => obj && typeof obj === 'object' &&
+    (Array.isArray(obj.cabinets) || Array.isArray(obj.cab) || Array.isArray(obj.furniture));
+
+  let selected = sources.find(o => looksLikePrep(o.value));
+  if(!selected) {
+    // 이름을 알 수 없는 전역 객체로 저장한 경우를 찾습니다.
+    for(const key of Object.keys(window)) {
+      if(knownKeys.includes(key)) continue;
+      try {
+        if(looksLikePrep(window[key])) {
+          selected = {key,value:window[key]};
+          break;
+        }
+      } catch(e) {}
+    }
+  }
+
+  // 과거 배치도에서 확인된 왼쪽·오른쪽 장의 좌표입니다.
+  // 원본이 없을 때만 임시 배치를 사용하며, 정확한 현장 치수는 아닙니다.
+  const fallbackCabinets = [
+    ...[-3.40,-1.92,-.44,1.04,2.51].map((z,i) => ({
+      id:'P-L'+String(i+1).padStart(2,'0'),kind:'glass',
+      label:'왼쪽 보관장 '+(i+1),x:-2.05,z,rot:90,
+      width:1.37,height:2.05,depth:.58,shelves:4
+    })),
+    ...[-2.64,-1.27,.10,1.47].map((z,i) => ({
+      id:'P-R'+String(i+1).padStart(2,'0'),kind:'glass',
+      label:'오른쪽 보관장 '+(i+1),x:2.05,z,rot:-90,
+      width:1.25,height:2.12,depth:.60,shelves:4
+    })),
+    // P-F01/02의 원래 좌표는 확인되지 않아 임시 좌표 사용
+    {id:'P-F01',kind:'wood',label:'앞쪽 보관장 1 (임시 위치)',x:-1.00,z:3.72,rot:180,width:.95,height:2.12,depth:.55,shelves:3},
+    {id:'P-F02',kind:'wood',label:'앞쪽 보관장 2 (임시 위치)',x:1.00,z:3.72,rot:180,width:.95,height:2.12,depth:.55,shelves:3}
+  ];
+
+  // 구형 배열 배치와 신형 객체 배치를 모두 지원합니다.
+  const normalizeCab = (c, i) => {
+    if(Array.isArray(c)) {
+      // [id, label, kind, x, z, rot, width, height, depth, shelves]
+      const full = typeof c[1] === 'string' && typeof c[2] === 'string';
+      return full ? {
+        id:c[0],label:c[1],kind:c[2],x:c[3],z:c[4],rot:c[5],
+        width:c[6],height:c[7],depth:c[8],shelves:c[9]
+      } : {
+        id:c[0],kind:c[1],x:c[2],z:c[3],rot:c[4],
+        width:c[5],height:c[6],depth:c[7],shelves:c[8]
+      };
+    }
+    return {...c};
+  };
+  const safeCab = (c, i) => {
+    const o = normalizeCab(c,i);
+    const p = o.position || {};
+    const kind = String(o.kind || o.type || 'wood').toLowerCase();
+    return {
+      ...o,
+      id:String(o.id || 'P-UNKNOWN-'+i).toUpperCase(),
+      kind:({tray:'glass',slidingglass:'glass',metal:'metal2',open:'wood24'})[kind] || kind,
+      x:num(o.x,num(p.x,0)),z:num(o.z,num(p.z,0)),
+      rot:num(o.rot,num(o.rotation,0)),
+      width:num(o.width,num(o.w,1.0)),
+      height:num(o.height,num(o.h,1.5)),
+      depth:num(o.depth,num(o.d,.55)),
+      shelves:Math.max(1,num(o.shelves,num(o.rows,3)))
+    };
+  };
+
+  let layout;
+  if(selected) {
+    const src = selected.value;
+    const room = src.room || {};
+    const size = src.size || [];
+    const rawCab = arrayOf(src.cabinets).length ? src.cabinets : arrayOf(src.cab);
+    layout = {
+      ...src,
+      id:'prep',
+      name:src.name || '과학준비실',
+      purpose:src.purpose || '과학 기자재 보관',
+      room:{
+        width:num(room.width,num(room.w,num(size[0],4.8))),
+        depth:num(room.depth,num(room.d,num(size[1],9.4))),
+        height:num(room.height,num(room.h,3.2))
+      },
+      cabinets:rawCab.map(safeCab),
+      furniture:arrayOf(src.furniture).map(safeCab),
+      doors:arrayOf(src.doors).map((d,i) => Array.isArray(d) ? {
+        id:'P-ENT'+(i+1),wall:'left',center:d[0],width:d[1],label:'출입문'
+      } : d),
+      inventory:arrayOf(src.inventory)
+    };
+    result.mode='original';
+    result.notes.push('원본 배치 '+selected.key+' 연결');
+  } else {
+    layout = {
+      id:'prep',name:'과학준비실',purpose:'기자재 보관',
+      room:{width:4.8,depth:9.4,height:3.2},
+      doors:[{id:'P-ENT1',wall:'left',center:3.82,width:1.16,label:'출입문'}],
+      cabinets:fallbackCabinets,
+      furniture:[],inventory:[]
+    };
+    result.mode='fallback';
+    result.notes.push('배치 파일에서 데이터를 찾지 못해 과거 기록 기반 임시 배치 사용');
+  }
+  // 준비실 기자재 번호(P-L01~P-F02)가 원본에서 누락된 경우에는
+  // 임의 좌표로 해당 보관장을 생성하지 않고 안내만 표시합니다.
+  result.count=layout.cabinets.length + layout.furniture.length;
+  window.MUNSAN_LAB_LAYOUT=layout;
+  console.info('[준비실 배치 연결]',result.mode,result.count,'개',result.notes.join(' / '));
+})();
 </script>
 
-<script src="../common/scene.js"></script>
-
+<!-- 기존 준비실 기자재 3D 모형 파일은 보존합니다. -->
+<script src="./contents.js?v=20261111d" onerror="window.MUNSAN_PREP_ERRORS.push('prep/contents.js 파일을 찾지 못함')"></script>
 <script>
-window.addEventListener('load',function(){
- const notice=document.getElementById('notice');
- const st=window.MUNSAN_PREP_STATUS;
- let msg='';
-
- if(!window.MUNSAN_LAB_LAYOUT){
-  msg='준비실 배치(layout.js)를 읽지 못했습니다. GitHub의 prep/layout.js 파일을 확인해 주세요.';
- }else if(!document.querySelector('canvas')){
-  msg='준비실 3D 엔진이 실행되지 않았습니다. F12 → Console의 빨간 오류를 확인해 주세요.';
- }else if(!st || !st.loaded){
-  msg='준비실 물품(contents.js)을 읽지 못했습니다. contents.js 파일명 및 내용을 확인해 주세요.';
- }else if(st.missing && st.missing.length){
-  msg='준비실 배치 파일에 없는 보관장 번호: '+st.missing.join(', ');
- }else if(st.errors && st.errors.length){
-  msg='준비실 물품 안내: '+st.errors.join(' / ');
- }
-
- if(msg && notice){
-  notice.style.display='block';
-  notice.textContent=msg;
-  console.warn('[준비실 점검]',msg);
- }
+try {
+ const q=new URLSearchParams(location.search).get('search');
+ if(q) document.getElementById('search').value=q;
+} catch(e) {}
+</script>
+<script src="../common/scene.js?v=20261111d" onerror="window.MUNSAN_PREP_ERRORS.push('common/scene.js 파일을 찾지 못함')"></script>
+<script>
+window.addEventListener('load',() => {
+  const status=document.getElementById('prepStatus');
+  const canvas=document.querySelector('canvas');
+  const check=window.MUNSAN_PREP_LAYOUT_CHECK || {};
+  const inventoryStatus=window.MUNSAN_PREP_STATUS || {};
+  const messages=[];
+  if(!canvas) messages.push('준비실 3D 화면이 로드되지 않았습니다. F12 콘솔에서 오류를 확인해 주세요.');
+  if(check.mode==='fallback') messages.push('원래 배치 데이터를 찾지 못해 임시 배치를 표시하고 있습니다. 정확한 배치는 prep/layout.js 원본 복구가 필요합니다.');
+  if(inventoryStatus.missing && inventoryStatus.missing.length) messages.push('찾을 수 없는 보관장: '+inventoryStatus.missing.join(', '));
+  if(window.MUNSAN_PREP_ERRORS.length) messages.push(window.MUNSAN_PREP_ERRORS.join(' / '));
+  if(messages.length) {
+    status.textContent=messages.join(' / ');
+    status.style.display='block';
+    console.warn('[준비실 점검]',messages);
+  }
 });
 </script>
-
 </body>
 </html>
