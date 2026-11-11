@@ -2,192 +2,200 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>문산중학교 | 과학실 3</title>
-<link rel="stylesheet" href="../common/style.css">
-<style>
-*{box-sizing:border-box}
-body{
- margin:0;
- font-family:"Malgun Gothic",Arial,sans-serif;
- background:#eaf2fa;
- color:#26394b;
-}
-header{
- position:fixed;
- top:16px;left:16px;right:16px;
- display:flex;gap:10px;flex-wrap:wrap;
- z-index:20;pointer-events:none;
-}
-header>*{pointer-events:auto}
-.glass{
- background:rgba(255,255,255,.91);
- border:1px solid rgba(213,226,239,.9);
- border-radius:20px;
- padding:10px 15px;
- box-shadow:0 8px 25px #526f8a22;
- backdrop-filter:blur(18px);
-}
-header a,header button{
- display:inline-block;
- text-decoration:none;
- border:0;border-radius:12px;
- background:#edf3f9;
- color:#34516e;
- padding:9px 12px;
- font-size:13px;
- cursor:pointer;
-}
-header .active{
- background:#2c75ed;
- color:white;
-}
-aside{
- position:fixed;
- z-index:20;
- right:16px;top:110px;bottom:18px;
- width:305px;
- overflow:auto;
- background:rgba(255,255,255,.93);
- border:1px solid #dce7f1;
- border-radius:22px;
- padding:20px;
- box-shadow:0 12px 35px #526f8a22;
- backdrop-filter:blur(18px);
-}
-aside h2{margin:0 0 8px}
-aside p{color:#6c8195;font-size:13px}
-#search{
- width:100%;padding:12px;
- border:1px solid #cbdbe9;
- border-radius:12px;
- background:white;
-}
-#results{margin-top:12px}
-#results button,#shelfList button{
- display:block;width:100%;
- margin:6px 0;padding:10px;
- text-align:left;
- border:0;border-radius:10px;
- background:#edf3f9;
- color:#34516e;
- cursor:pointer;
-}
-#detail{
- border-top:1px solid #dce7f1;
- margin-top:16px;padding-top:14px;
-}
-#detail[hidden]{display:none}
-#detailMeta{
- line-height:1.6;
- color:#687d91;
- font-size:13px;
-}
-#detailClose,#doorToggle{
- border:0;border-radius:10px;
- padding:9px 12px;
- cursor:pointer;
- background:#e4edf7;
- color:#34516e;
-}
-.bottom{
- position:fixed;
- bottom:16px;left:16px;
- display:flex;gap:8px;z-index:20;
-}
-.bottom button{
- padding:11px 14px;
- background:rgba(255,255,255,.92);
- border:1px solid #d9e5f0;
- border-radius:13px;
- cursor:pointer;
-}
-#notice{
- display:none;
- position:fixed;
- top:50%;left:50%;
- transform:translate(-50%,-50%);
- padding:24px;
- background:white;
- border-radius:16px;
- z-index:100;
-}
-body.dark aside,body.dark .glass{
- background:rgba(30,42,59,.94);
- color:#e8f1fb;
-}
-@media(max-width:700px){
- header{top:7px;left:7px;right:7px;gap:5px}
- .glass{padding:7px}
- header button,header a{padding:6px;font-size:11px}
- aside{
-  top:auto;right:8px;bottom:8px;
-  width:min(280px,75vw);
-  max-height:46vh;
-  padding:12px;
- }
- .bottom{bottom:8px;left:8px}
-}
-</style>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+    content="width=device-width,
+    initial-scale=1,
+    viewport-fit=cover">
+
+  <meta name="theme-color" content="#eaf2fa">
+
+  <title>
+    과학실 3 · 문산중학교 3D 기자재 안내
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="../common/style.css">
+
+  <style>
+    #searchPanel {
+      position: fixed !important;
+      left: auto !important;
+      right: 18px !important;
+      top: 74px;
+      z-index: 100;
+      width: 225px;
+      max-height: calc(100vh - 155px);
+      overflow-y: auto;
+    }
+
+    #detail:not([hidden]) {
+      position: fixed;
+      left: 18px;
+      right: auto;
+      z-index: 110;
+    }
+
+    @media (max-width:700px) {
+      #searchPanel {
+        left: auto !important;
+        right: 8px !important;
+        top: 65px;
+        width: min(225px,70vw);
+        max-height: 43vh;
+      }
+
+      #detail:not([hidden]) {
+        left: 8px;
+        right: auto;
+        max-width: 75vw;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
- <div class="glass">
-  <strong>⚗️ 문산중학교 과학실 3</strong>
-  <a href="../index.html">메인</a>
- </div>
+  <header class="topbar">
 
- <nav class="glass">
-  <a href="../science1/index.html">과학실 1</a>
-  <a href="../science2/index.html">과학실 2</a>
-  <button class="active">과학실 3</button>
- </nav>
+    <a
+      class="round glass"
+      href="../index.html">
+      ← 메인
+    </a>
 
- <nav class="glass">
-  <button data-view="overview" class="active">전체보기</button>
-  <button data-view="left">왼쪽 벽</button>
-  <button data-view="back">뒤쪽 벽</button>
-  <button data-view="window">오른쪽 창가</button>
-  <button data-view="top">위에서</button>
- </nav>
-</header>
+    <div class="brand glass">
+      <strong>🌍 과학실 3</strong>
+      <span>문산중학교 · 3D 공간 안내</span>
+      <em>visionOS</em>
+    </div>
 
-<aside>
- <h2>과학실 3</h2>
- <p>지구과학 중심 · 기자재 위치 안내</p>
+    <button
+      id="theme"
+      class="round glass"
+      aria-label="주간 야간 전환">
+      🌙 야간 모드
+    </button>
 
- <input id="search" type="search"
-        placeholder="보관장 또는 기자재 검색">
+  </header>
 
- <div id="results"></div>
+  <section
+    id="searchPanel"
+    class="glass"
+    aria-label="보관장 검색">
 
- <section id="detail" hidden>
-  <button id="detailClose" style="float:right">닫기</button>
-  <h3 id="detailTitle"></h3>
-  <p id="detailMeta"></p>
-  <div id="shelfList"></div>
-  <button id="doorToggle">보관장 문 열기</button>
- </section>
-</aside>
+    <h2>과학실 3 기자재 찾기</h2>
 
-<div class="bottom">
- <button id="reset">초기화</button>
- <button id="fullscreen">전체화면</button>
- <button id="theme">🌙 야간 모드</button>
-</div>
+    <p>
+      암석·광물·화석·천체망원경·천문용품 검색
+    </p>
 
-<div id="notice"></div>
+    <input
+      id="search"
+      type="search"
+      placeholder="기자재 또는 보관장 번호"
+      autocomplete="off"
+      aria-label="검색어 입력">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <div
+      id="results"
+      aria-live="polite">
+    </div>
 
-<!-- 과학실 3 전용 배치 -->
-<script src="./layout.js"></script>
+    <small>
+      일부 선반 위치 임시 배치 · 번호는 시스템 관리용
+    </small>
 
-<!-- 과학실 1·2와 공통 엔진 -->
-<script src="../common/scene.js"></script>
+  </section>
+
+  <section
+    id="detail"
+    class="glass"
+    hidden
+    aria-label="선택한 보관장">
+
+    <div class="detail-heading">
+
+      <h2 id="detailTitle"></h2>
+
+      <button
+        id="detailClose"
+        aria-label="닫기">
+        ✕
+      </button>
+
+    </div>
+
+    <div id="detailMeta"></div>
+    <div id="shelfList"></div>
+
+    <button
+      id="doorToggle"
+      class="primary">
+      보관장 문 열기
+    </button>
+
+  </section>
+
+  <div id="hint">
+    마우스로 회전 · 휠 확대 · 보관장 클릭하여 문 열기
+  </div>
+
+  <nav
+    id="controls"
+    class="glass">
+
+    <button
+      data-view="overview"
+      class="active">
+      🏫 전체
+    </button>
+
+    <button data-view="left">
+      🗄 왼쪽
+    </button>
+
+    <button data-view="back">
+      🌍 뒤쪽
+    </button>
+
+    <button data-view="window">
+      🪟 창가
+    </button>
+
+    <button data-view="top">
+      ⬚ 평면
+    </button>
+
+    <button id="reset">
+      ↻ 초기화
+    </button>
+
+    <button id="fullscreen">
+      ⛶ 전체화면
+    </button>
+
+  </nav>
+
+  <div
+    id="notice"
+    role="status">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- 기존 과학실 3 배치 -->
+  <script src="./layout.js"></script>
+
+  <!-- 과학실 3 기자재와 3D 모형 -->
+  <script src="./contents.js?v=1"></script>
+
+  <!-- 기존 공통 엔진: 수정하지 않음 -->
+  <script src="../common/scene.js"></script>
 
 </body>
 </html>
