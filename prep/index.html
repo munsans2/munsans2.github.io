@@ -171,8 +171,18 @@ window.addEventListener('error',function(e){
     result.mode='fallback';
     result.notes.push('배치 파일에서 데이터를 찾지 못해 과거 기록 기반 임시 배치 사용');
   }
-  // 준비실 기자재 번호(P-L01~P-F02)가 원본에서 누락된 경우에는
-  // 임의 좌표로 해당 보관장을 생성하지 않고 안내만 표시합니다.
+  // 기존 배치에서 냉장고·폐수통으로 사용했던 두 관리번호만 제거합니다.
+  // 아래쪽에 별도로 생성하는 실제 냉장고·노란 폐수통 3D 모델은 유지됩니다.
+  const obsolete = new Set(['P-FRIDGE', 'P-WASTE']);
+  const isObsolete = value => obsolete.has(String(value ?? '').trim().toUpperCase());
+  for (const key of ['cabinets', 'furniture']) {
+    layout[key] = (Array.isArray(layout[key]) ? layout[key] : [])
+      .filter(c => !isObsolete(c.id));
+  }
+  layout.inventory = (Array.isArray(layout.inventory) ? layout.inventory : [])
+    .filter(item => !isObsolete(item.cabinet));
+
+  // 원래 보관장 좌표는 바꾸지 않습니다.
   result.count=layout.cabinets.length + layout.furniture.length;
   window.MUNSAN_LAB_LAYOUT=layout;
   console.info('[준비실 배치 연결]',result.mode,result.count,'개',result.notes.join(' / '));
